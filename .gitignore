@@ -1,0 +1,11 @@
+bin
+obj
+_ReSharper.*
+*.pdb*
+/.hg
+/.hgignore
+*.suo
+*.user
+*.pdb
+*.nupkg
+*.bak

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Smartflow</id>
+    <version>1.0.0</version>
+    <authors>Van Thoai Nguyen</authors>
+    <owners>Van Thoai Nguyen</owners>
+    <licenseUrl>http://sam.zoy.org/wtfpl/COPYING</licenseUrl>
+	<projectUrl>https://github.com/vanthoainguyen/Smartflow</projectUrl>	    
+	<iconUrl>http://oi60.tinypic.com/2mwcqq.jpg</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+	<summary>Lightweight messaging framework to build CQRS style application for those who has been familiar with ASP.NET MVC</summary>    
+	<description>Smartflow is a small and simple module inspired by Greg Young SimpleCQRS. It also borrows alot of ASP.NET MVC source code to facilitate API filtering style such as Attribute filters, Global filters. Dependency injection is also fully supported and on top of it, the aim of this module is keep your code simple and easy to maintain if you want to build CQRS and event/messaging style application.</description>
+    <releaseNotes>https://github.com/vanthoainguyen/Smartflow/blob/master/nuget/Smartflow/CHANGELOG.txt</releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>Smartflow CQRS Event Command Messaging ASP.NET MVC</tags>
+    <dependencies>
+		<dependency id="C5" version="2.2.5073.27396" />
+    </dependencies>
+  </metadata>
+</package>

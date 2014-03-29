@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1A6DB982-077F-49B4-AF64-E3763A4D9C3F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Smartflow.Core</RootNamespace>
+    <AssemblyName>Smartflow.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Smartflow.Core.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Smartflow.Core.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="C5">
+      <HintPath>..\packages\C5.2.2.5073.27396\lib\portable-net40+sl50+wp80+win\C5.dll</HintPath>
+    </Reference>
+    <Reference Include="Gallio, Version=3.4.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
+    <Reference Include="MbUnit, Version=3.4.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CQRS\MessageHandler.cs" />
+    <Compile Include="DefaultHandlerInvoker.cs" />
+    <Compile Include="DefaultHandlerProvider.cs" />
+    <Compile Include="DependencyResolver.cs" />
+    <Compile Include="DependencyResolverHandlerProvider.cs" />
+    <Compile Include="ExceptionContext.cs" />
+    <Compile Include="Filter.cs" />
+    <Compile Include="FilterAttribute.cs" />
+    <Compile Include="FilterAttributeFilterProvider.cs" />
+    <Compile Include="FilterInfo.cs" />
+    <Compile Include="FilterProviderCollection.cs" />
+    <Compile Include="FilterProviders.cs" />
+    <Compile Include="FilterScope.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="GlobalFilterCollection.cs" />
+    <Compile Include="GlobalFilters.cs" />
+    <Compile Include="HandlerContext.cs" />
+    <Compile Include="CQRS\IDistributedMessage.cs" />
+    <Compile Include="HandlerProvider.cs" />
+    <Compile Include="HandlerProviderCollection.cs" />
+    <Compile Include="IDependencyResolver.cs" />
+    <Compile Include="IExceptionFilter.cs" />
+    <Compile Include="IFilter.cs" />
+    <Compile Include="IHandlerInvoker.cs" />
+    <Compile Include="IHandlerProvider.cs" />
+    <Compile Include="IMessageFilter.cs" />
+    <Compile Include="CQRS\MessageExtensions.cs" />
+    <Compile Include="CQRS\Command.cs" />
+    <Compile Include="CQRS\Event.cs" />
+    <Compile Include="CQRS\ICommandSender.cs" />
+    <Compile Include="CQRS\IEventPublisher.cs" />
+    <Compile Include="CQRS\IHandler.cs" />
+    <Compile Include="CQRS\IMessage.cs" />
+    <Compile Include="CQRS\InternalBus.cs" />
+    <Compile Include="IFilterProvider.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="Local.cs" />
+    <Compile Include="GenericCollectionExtensions.cs" />
+    <Compile Include="MessageHandledContext.cs" />
+    <Compile Include="NullLogger.cs" />
+    <Compile Include="ReflectedAttributeCache.cs" />
+    <Compile Include="Tasks\LimitedConcurrencyLevelTaskScheduler.cs" />
+    <Compile Include="Tasks\MessagePriority.cs" />
+    <Compile Include="Tasks\PriorityTask.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\PriorityTaskComparer.cs" />
+    <Compile Include="TypeExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>COPY /Y $(TargetDir)\Smartflow.Core.dll $(SolutionDir)nuget\Smartflow\lib\net40\
+COPY /Y $(TargetDir)\Smartflow.Core.xml $(SolutionDir)nuget\Smartflow\lib\net40\</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

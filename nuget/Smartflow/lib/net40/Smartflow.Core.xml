@@ -1,0 +1,1007 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Smartflow.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Smartflow.Core.DependencyResolver">
+            <summary>
+            A static class to provide default <see cref="T:Smartflow.Core.IDependencyResolver"/>
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.DependencyResolver.SetDependencyResolver(Smartflow.Core.IDependencyResolver)">
+            <summary>
+            Replace current Dependency Resolver by the provided one
+            </summary>
+            <param name="dependencyResolver"></param>
+        </member>
+        <member name="P:Smartflow.Core.DependencyResolver.Current">
+            <summary>
+            Current active Dependency Resolver
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.DependencyResolver.CacheDependencyResolver">
+            <summary>
+            Wraps an IDependencyResolver and ensures single instance per-type.
+            </summary>
+            <remarks>
+            Note it's possible for multiple threads to race and call the _resolver service multiple times.
+            We'll pick one winner and ignore the others and still guarantee a unique instance.
+            </remarks>
+        </member>
+        <member name="T:Smartflow.Core.IDependencyResolver">
+            <summary>
+            Provide dependency resolver utility for the library just like ASP.NET MVC
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.IDependencyResolver.GetService``1">
+            <summary>
+            Resolve service
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Smartflow.Core.IDependencyResolver.GetServices``1">
+            <summary>
+            Resolve services
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Smartflow.Core.IDependencyResolver.GetServices(System.Type)">
+            <summary>
+            Get services by type
+            </summary>
+            <param name="serviceType"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Smartflow.Core.IHandlerProvider">
+            <summary>
+            A provider to resolve all handlers for a message type
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.IHandlerProvider.GetHandlers``1">
+            <summary>
+            Get all handlers for a message type
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Smartflow.Core.DefaultHandlerProvider.RegisterHandler``1(Smartflow.Core.CQRS.IHandler{``0})">
+            <summary>
+            Register a handler
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="handler"></param>
+        </member>
+        <member name="T:Smartflow.Core.KeyEqualityComparer`1">
+            <summary>
+            This class is used to distinct a list by a key selector
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Smartflow.Core.GenericCollectionExtensions">
+            <summary>
+            This class provides some extension methods for Generic collections
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.GenericCollectionExtensions.Distinct``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Object})">
+            <summary>
+            Distinct a list by a key selector
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <param name="keyExtractor"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Smartflow.Core.IFilterProvider">
+            <summary>
+            Get all filters by HandlerContext
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.IFilterProvider.GetFilters(Smartflow.Core.HandlerContext)">
+            <summary>
+            Get all filters for current HandlerContext
+            </summary>
+            <param name="handlerContext"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Smartflow.Core.Filter">
+            <summary>
+            Copy from System.Web.Mvc, it's just a wrapper around IFilter or any custom filter
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.Filter.DefaultOrder">
+            <summary>
+            The default order
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.Filter.#ctor(System.Object,Smartflow.Core.FilterScope,System.Nullable{System.Int32})">
+            <summary>
+            Initizalie a filter by the instance of the filter and its order
+            </summary>
+            <param name="instance"></param>
+            <param name="filterScope"> </param>
+            <param name="order"></param>
+        </member>
+        <member name="P:Smartflow.Core.Filter.Instance">
+            <summary>
+            The instance of the filter object
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.Filter.Order">
+            <summary>
+            The order of the filter
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.Filter.Scope">
+            <summary>
+            The scope of the filter
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.CQRS.ICommandSender">
+            <summary>
+            Implement this interface to send commands
+            The default "InternalBus" implementation will be responsible for this as an internal memory bus
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.CQRS.ICommandSender.Send``1(``0)">
+            <summary>
+            Send a command
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="command"></param>
+        </member>
+        <member name="T:Smartflow.Core.FilterProviders">
+            <summary>
+            A static class to get all filter providers
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.FilterProviders.Providers">
+            <summary>
+            Get all registered filter providers
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.DefaultHandlerInvoker">
+            <summary>
+            Invoke a message together with executing filter attributes
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.IHandlerInvoker">
+            <summary>
+            Implement this interface to invoke a message
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.IHandlerInvoker.InvokeHandler``1(Smartflow.Core.CQRS.IHandler{``0},``0)">
+            <summary>
+            Invoke a handler with the message
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="handler"></param>
+            <param name="message"></param>
+        </member>
+        <member name="M:Smartflow.Core.DefaultHandlerInvoker.InvokeHandler``1(Smartflow.Core.CQRS.IHandler{``0},``0)">
+            <summary>
+            Invoke all filters and the handler method
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="handler"></param>
+            <param name="message"></param>
+        </member>
+        <member name="T:Smartflow.Core.FilterProviderCollection">
+            <summary>
+            A oollection of filter provider
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.FilterProviderCollection.#ctor">
+            <summary>
+            Initiazliae a FilterProviderCollection
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.FilterProviderCollection.#ctor(System.Collections.Generic.IList{Smartflow.Core.IFilterProvider})">
+            <summary>
+            Initiazliae a FilterProviderCollection with list of providers
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.FilterProviderCollection.GetFilters(Smartflow.Core.HandlerContext)">
+            <summary>
+            Get all filters by current handlerContext
+            </summary>
+            <param name="handlerContext"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Smartflow.Core.FilterProviderCollection.ClearItems">
+            <summary>
+            Clear all registered providers
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.FilterProviderCollection.InsertItem(System.Int32,Smartflow.Core.IFilterProvider)">
+            <summary>
+            Insert a filter provider
+            </summary>
+            <param name="index"></param>
+            <param name="item"></param>
+        </member>
+        <member name="M:Smartflow.Core.FilterProviderCollection.RemoveItem(System.Int32)">
+            <summary>
+            Remove provider at specific index
+            </summary>
+            <param name="index"></param>
+        </member>
+        <member name="M:Smartflow.Core.FilterProviderCollection.SetItem(System.Int32,Smartflow.Core.IFilterProvider)">
+            <summary>
+            Overwrite the filter at index
+            </summary>
+            <param name="index"></param>
+            <param name="item"></param>
+        </member>
+        <member name="T:Smartflow.Core.FilterAttributeFilterProvider">
+            <summary>
+            An implementation of <see cref="T:Smartflow.Core.IFilterProvider"/> that get Filters from HandlerContext
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.FilterAttributeFilterProvider.GetFilters(Smartflow.Core.HandlerContext)">
+            <summary>
+            Get all filters for the current HandlerContext
+            </summary>
+            <param name="handlerContext"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Smartflow.Core.FilterAttributeFilterProvider.GetHandlerAttributes(Smartflow.Core.HandlerContext)">
+            <summary>
+            Get attributes decorated on the method handle of the handler
+            </summary>
+            <param name="handlerContext"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Smartflow.Core.FilterAttributeFilterProvider.GetHandlerMethodAttributes(Smartflow.Core.HandlerContext)">
+            <summary>
+            Get attributes decorated on the handler class
+            </summary>
+            <param name="handlerContext"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Smartflow.Core.FilterAttributeFilterProvider.GetMessageAttributes(Smartflow.Core.HandlerContext)">
+            <summary>
+             Get attributes decorated on the message
+            </summary>
+            <param name="handlerContext"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Smartflow.Core.CQRS.IMessage">
+            <summary>
+            Implement this class as a message object which contains information for a handler to handle it
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.CQRS.IMessage.Priority">
+            <summary>
+            A message should have a priority to be processed. The higher priority it is, the faster the message will be processed
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.Global">
+            <summary>
+            The class that provide access to global information like the total polling messages which can be overwritten by Core.RabbitMQ module
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.Global.PendingJobCount">
+            <summary>
+            Get the total queueing jobs
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.CQRS.IEventPublisher">
+            <summary>
+            Implement this interface to publish events
+            The default "InternalBus" implementation will be responsible for this as an internal memory bus
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.CQRS.IEventPublisher.Publish``1(``0)">
+            <summary>
+            Publish an event
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="event"></param>
+        </member>
+        <member name="T:Smartflow.Core.CQRS.MessageHandler`1">
+            <summary>
+            Implement this abstract class to handle events and commands or anything implement IMessage
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Smartflow.Core.CQRS.IHandler`1">
+            <summary>
+            Implement this interface to handle events and commands or anything implement  IMessage
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.CQRS.IHandler`1.Handle(`0)">
+            <summary>
+            Handle the message
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Smartflow.Core.CQRS.MessageHandler`1.Handle(`0)">
+            <summary>
+            Handle the message
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Smartflow.Core.CQRS.MessageHandler`1.OnMessageExecuting">
+            <summary>
+            This method is called before message is executed
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.CQRS.MessageHandler`1.OnMessageExecuted">
+            <summary>
+            This method is called after message is executed
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.CQRS.MessageHandler`1.Context">
+            <summary>
+            The handler context
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.Tasks.MessagePriority">
+            <summary>
+            This enum is a logical priority in the system.
+            The core project is expected to be working with any uint Priority number
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.Tasks.MessagePriority.Zero">
+            <summary>
+            Priority 0, lowest
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.Tasks.MessagePriority.One">
+            <summary>
+            Priority 1
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.Tasks.MessagePriority.Two">
+            <summary>
+            Priority 2
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.Tasks.MessagePriority.Three">
+            <summary>
+            Priority 3
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.Tasks.MessagePriority.Four">
+            <summary>
+            Priority 4
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.Tasks.MessagePriority.Five">
+            <summary>
+            Priority 5
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.Tasks.MessagePriority.Six">
+            <summary>
+            Priority 6
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.Tasks.MessagePriority.Seven">
+            <summary>
+            Priority 7
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.Tasks.MessagePriority.Eight">
+            <summary>
+            Priority 8
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.Tasks.MessagePriority.Nine">
+            <summary>
+            Priority 9
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.Tasks.MessagePriority.Ten">
+            <summary>
+            Priority 10
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.Tasks.MessagePriority.OnDemand">
+            <summary>
+            Highest priority, any message with this priority once scheduled with the InternalBus will be sent to the Scheduler to execute straight away
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.CQRS.MessageExtensions">
+            <summary>
+            This class provides some extension methods for the IMessage object
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.CQRS.MessageExtensions.OnDemand``1(``0)">
+            <summary>
+            Change the priority of current message to be max value so it can be executed asap
+            </summary>
+            <param name="msg"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Smartflow.Core.ExceptionContext">
+            <summary>
+            The Exception context
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.HandlerContext">
+            <summary>
+            The handler context
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.HandlerContext.HandlerType">
+            <summary>
+            The type of the handler
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.HandlerContext.MessageType">
+            <summary>
+            The type of the message
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.HandlerContext.MessageHandled">
+            <summary>
+            Determine whether the message was handled
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.HandlerContext.MetaData">
+            <summary>
+            The share dictionary of objects that can be set/get during handling the message
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.ExceptionContext.#ctor(Smartflow.Core.HandlerContext,System.Exception)">
+            <summary>
+            Initialize an instance of ExceptionContext
+            </summary>
+            <param name="handlerContext"></param>
+            <param name="exception"></param>
+        </member>
+        <member name="P:Smartflow.Core.ExceptionContext.Exception">
+            <summary>
+            The exception
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.ExceptionContext.ExceptionHandled">
+            <summary>
+            Determine whether the exception was handled
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.ExceptionContext.HandlerType">
+            <summary>
+            The type of the handler
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.ExceptionContext.MessageType">
+            <summary>
+            The type of the message
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.IFilter">
+            <summary>
+            Copy from System.Web.Mvc
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.IFilter.AllowMultiple">
+            <summary>
+            Whether allow multiple filter of the same type
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.IFilter.Order">
+            <summary>
+            The order of the filter
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.HandlerProvider">
+            <summary>
+            Provide ways to register and resolve handlers
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.HandlerProvider.Providers">
+            <summary>
+            All current providers
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.FilterAttribute">
+            <summary>
+            A base filter class which is very similar to Asp.NET MVC FilterAttribute
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.FilterAttribute.AllowMultiple">
+            <summary>
+            Determine whether the filter can be declared multiple time
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.FilterAttribute.Order">
+            <summary>
+            The order which the filter will be executed
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.ILogger">
+            <summary>
+            Copy from log4net.ILog
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.Tasks.LimitedConcurrencyLevelTaskScheduler">
+            <summary> 
+            Provides a task scheduler that ensures a maximum concurrency level while 
+            running on top of the ThreadPool. 
+            
+            http://msdn.microsoft.com/en-us/library/ee789351.aspx
+            </summary> 
+        </member>
+        <member name="F:Smartflow.Core.Tasks.LimitedConcurrencyLevelTaskScheduler._currentThreadIsProcessingItems">
+            <summary>Whether the current thread is processing work items.</summary>
+        </member>
+        <member name="F:Smartflow.Core.Tasks.LimitedConcurrencyLevelTaskScheduler._priorityTasks">
+            <summary>The list of tasks to be executed.</summary> 
+        </member>
+        <member name="F:Smartflow.Core.Tasks.LimitedConcurrencyLevelTaskScheduler._maxDegreeOfParallelism">
+            <summary>The maximum concurrency level allowed by this scheduler.</summary> 
+        </member>
+        <member name="F:Smartflow.Core.Tasks.LimitedConcurrencyLevelTaskScheduler._delegatesQueuedOrRunning">
+            <summary>Whether the scheduler is currently processing work items.</summary> 
+        </member>
+        <member name="M:Smartflow.Core.Tasks.LimitedConcurrencyLevelTaskScheduler.#ctor(System.Int32)">
+            <summary> 
+            Initializes an instance of the LimitedConcurrencyLevelTaskScheduler class with the 
+            specified degree of parallelism. 
+            </summary> 
+            <param name="maxDegreeOfParallelism">The maximum degree of parallelism provided by this scheduler.</param>
+        </member>
+        <member name="M:Smartflow.Core.Tasks.LimitedConcurrencyLevelTaskScheduler.QueueTask(System.Threading.Tasks.Task)">
+            <summary>Queues a task to the scheduler.</summary> 
+            <param name="task">The task to be queued.</param>
+        </member>
+        <member name="M:Smartflow.Core.Tasks.LimitedConcurrencyLevelTaskScheduler.NotifyThreadPoolOfPendingWork">
+            <summary> 
+            Informs the ThreadPool that there's work to be executed for this scheduler. 
+            </summary> 
+        </member>
+        <member name="M:Smartflow.Core.Tasks.LimitedConcurrencyLevelTaskScheduler.TryExecuteTaskInline(System.Threading.Tasks.Task,System.Boolean)">
+            <summary>Attempts to execute the specified task on the current thread.</summary> 
+            <param name="task">The task to be executed.</param>
+            <param name="taskWasPreviouslyQueued"></param>
+            <returns>Whether the task could be executed on the current thread.</returns> 
+        </member>
+        <member name="M:Smartflow.Core.Tasks.LimitedConcurrencyLevelTaskScheduler.TryDequeue(System.Threading.Tasks.Task)">
+            <summary>Attempts to remove a previously scheduled task from the scheduler.</summary> 
+            <param name="task">The task to be removed.</param>
+            <returns>Whether the task could be found and removed.</returns> 
+        </member>
+        <member name="M:Smartflow.Core.Tasks.LimitedConcurrencyLevelTaskScheduler.GetScheduledTasks">
+            <summary>Gets an enumerable of the tasks currently scheduled on this scheduler.</summary> 
+            <returns>An enumerable of the tasks currently scheduled.</returns> 
+        </member>
+        <member name="P:Smartflow.Core.Tasks.LimitedConcurrencyLevelTaskScheduler.MaximumConcurrencyLevel">
+            <summary>Gets the maximum concurrency level supported by this scheduler.</summary> 
+        </member>
+        <member name="T:Smartflow.Core.IExceptionFilter">
+            <summary>
+            Implement this interface to handle 
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.IExceptionFilter.OnException(Smartflow.Core.ExceptionContext)">
+            <summary>
+            Handle the exception context
+            </summary>
+            <param name="exceptionContext"></param>
+        </member>
+        <member name="T:Smartflow.Core.Local">
+            <summary>
+            This class contains global settings shared within the library
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.Local.PendingTaskCount">
+            <summary>
+            Return pending task count for current system;
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.CQRS.Event">
+            <summary>
+            An event publisher should publish an Event and doesn't care which handler will handle it
+            In other words, an event can be handled by more than 1 handler
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.CQRS.Event.Priority">
+            <summary>
+            An event should have a priority to be processed. The higher priority it is, the faster the event will be processed
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.GlobalFilters">
+            <summary>
+            The global filters collection which allow registration of filters at global scope
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.GlobalFilters.Filters">
+            <summary>
+            The global fileter collection
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.GlobalFilterCollection">
+            <summary>
+            Global filter connection
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.GlobalFilterCollection.Add(System.Object)">
+            <summary>
+            Add a filter 
+            </summary>
+            <param name="filter"></param>
+        </member>
+        <member name="M:Smartflow.Core.GlobalFilterCollection.Add(System.Object,System.Int32)">
+            <summary>
+            Add a filter with custom order
+            </summary>
+            <param name="filter"></param>
+            <param name="order"></param>
+        </member>
+        <member name="M:Smartflow.Core.GlobalFilterCollection.Clear">
+            <summary>
+            Clear all registered global filter
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.GlobalFilterCollection.Contains(System.Object)">
+            <summary>
+            Check if a filter has already been registered
+            </summary>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Smartflow.Core.GlobalFilterCollection.GetEnumerator">
+            <summary>
+            Get enumerator
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Smartflow.Core.GlobalFilterCollection.Remove(System.Object)">
+            <summary>
+            Remove a registered global filter
+            </summary>
+            <param name="filter"></param>
+        </member>
+        <member name="P:Smartflow.Core.GlobalFilterCollection.Count">
+            <summary>
+            Get total global registered filters
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.CQRS.Handler`1">
+            <summary>
+            A base handler class
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Smartflow.Core.CQRS.Handler`1.#ctor">
+            <summary>
+            Initialize the CommandSender and EventPublisher
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.CQRS.Handler`1.Handle(`0)">
+            <summary>
+            Implement this method to handle the message
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="P:Smartflow.Core.CQRS.Handler`1.CommandSender">
+            <summary>
+            The Command Sender which can be used to send new command during processing a message
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.CQRS.Handler`1.EventPublisher">
+            <summary>
+            The Event Publisher which can be used to publish any events during processing a message
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.CQRS.Handler`1.Context">
+            <summary>
+            The context of the message when being handled
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.IMessageFilter">
+            <summary>
+            Implement this interface to provide a filter logic for a message handling process without knowing the message and handler instances
+            <para>Normally, global filters should implement this</para>
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.IMessageFilter.OnMessageExecuting(Smartflow.Core.HandlerContext)">
+            <summary>
+            This method is called before message is executed
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Smartflow.Core.IMessageFilter.OnMessageExecuted(Smartflow.Core.HandlerContext)">
+            <summary>
+            This method is called after message is executed
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:Smartflow.Core.IMessageFilter`1">
+            <summary>
+            Implement this interface to provide a filter logic for a message handling process
+            <para>Normally, attribute filter should implement this</para>
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Smartflow.Core.IMessageFilter`1.OnMessageExecuting(Smartflow.Core.HandlerContext{`0})">
+            <summary>
+            This method is called before message is executed
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Smartflow.Core.IMessageFilter`1.OnMessageExecuted(Smartflow.Core.MessageHandledContext{`0})">
+            <summary>
+            This method is called after message is executed
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:Smartflow.Core.HandlerContext`1">
+            <summary>
+            The handler context
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Smartflow.Core.HandlerContext`1.#ctor(`0,Smartflow.Core.CQRS.IHandler{`0})">
+            <summary>
+            Initialize a handler context by message and its handler
+            </summary>
+            <param name="msg"></param>
+            <param name="handler"></param>
+        </member>
+        <member name="P:Smartflow.Core.HandlerContext`1.Message">
+            <summary>
+            The message being handled
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.HandlerContext`1.Handler">
+            <summary>
+            The handler instance
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.HandlerContext`1.HandlerType">
+            <summary>
+            The type of the handler
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.HandlerContext`1.MessageType">
+            <summary>
+            The type of the message
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.HandlerProviderCollection">
+            <summary>
+            List of all registered <see cref="T:Smartflow.Core.IHandlerProvider"/>
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.HandlerProviderCollection.GetHandlers``1">
+            <summary>
+            Get all handlers from all registered <see cref="T:Smartflow.Core.IHandlerProvider"/>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Smartflow.Core.HandlerProviderCollection.RegisterHandler``1(Smartflow.Core.CQRS.IHandler{``0})">
+            <summary>
+            Register a handler
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="handler"></param>
+        </member>
+        <member name="T:Smartflow.Core.Tasks.PriorityTask">
+            <summary>
+            A custom Task implement which can be scheduled to run by its priority using <see cref="T:Smartflow.Core.Tasks.LimitedConcurrencyLevelTaskScheduler"/>
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.Tasks.PriorityTask.#cctor">
+            <summary>
+            This static constructor will set the Factory by a Factory object with LimitedConcurrencyLevelTaskScheduler
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.Tasks.PriorityTask.#ctor(System.Action)">
+            <summary>
+            
+            </summary>
+            <param name="action"></param>
+        </member>
+        <member name="M:Smartflow.Core.Tasks.PriorityTask.#ctor(System.Action,System.Threading.CancellationToken)">
+            <summary>
+            
+            </summary>
+            <param name="action"></param>
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="M:Smartflow.Core.Tasks.PriorityTask.#ctor(System.Action,System.Threading.Tasks.TaskCreationOptions)">
+            <summary>
+            
+            </summary>
+            <param name="action"></param>
+            <param name="creationOptions"></param>
+        </member>
+        <member name="M:Smartflow.Core.Tasks.PriorityTask.#ctor(System.Action,System.Threading.CancellationToken,System.Threading.Tasks.TaskCreationOptions)">
+            <summary>
+            
+            </summary>
+            <param name="action"></param>
+            <param name="cancellationToken"></param>
+            <param name="creationOptions"></param>
+        </member>
+        <member name="M:Smartflow.Core.Tasks.PriorityTask.#ctor(System.Action{System.Object},System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="action"></param>
+            <param name="state"></param>
+        </member>
+        <member name="M:Smartflow.Core.Tasks.PriorityTask.#ctor(System.Action{System.Object},System.Object,System.Threading.CancellationToken)">
+            <summary>
+            
+            </summary>
+            <param name="action"></param>
+            <param name="state"></param>
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="M:Smartflow.Core.Tasks.PriorityTask.#ctor(System.Action{System.Object},System.Object,System.Threading.Tasks.TaskCreationOptions)">
+            <summary>
+            
+            </summary>
+            <param name="action"></param>
+            <param name="state"></param>
+            <param name="creationOptions"></param>
+        </member>
+        <member name="M:Smartflow.Core.Tasks.PriorityTask.#ctor(System.Action{System.Object},System.Object,System.Threading.CancellationToken,System.Threading.Tasks.TaskCreationOptions)">
+            <summary>
+            
+            </summary>
+            <param name="action"></param>
+            <param name="state"></param>
+            <param name="cancellationToken"></param>
+            <param name="creationOptions"></param>
+        </member>
+        <member name="P:Smartflow.Core.Tasks.PriorityTask.Factory">
+            <summary>
+            Overwrite the Factory of the TPL Task class as there was not way to change the Task.Factory value
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.Tasks.PriorityTask.PendingTaskCount">
+            <summary>
+            Synchronization is not really neccessary here
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.Tasks.PriorityTask.Priority">
+            <summary>
+            The priority of the message
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.Tasks.PriorityTask.CreatedTime">
+            <summary>
+            The age of the message
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.Tasks.PriorityTask.OnDemand">
+            <summary>
+            To let the LimitedConcurrencyLevelTaskScheduler decide to execute this thread straight away if it's true
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.ReflectedAttributeCache">
+            <summary>
+            Copy from Asp.NET MVC
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.MessageHandledContext`1">
+            <summary>
+            The context where message is successfully handled
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Smartflow.Core.MessageHandledContext`1.#ctor(Smartflow.Core.HandlerContext{`0},System.Boolean,System.Exception)">
+            <summary>
+            Initialize the context by original HandlerContext
+            </summary>
+            <param name="handlerContext"></param>
+            <param name="canceled"></param>
+            <param name="exception"></param>
+        </member>
+        <member name="P:Smartflow.Core.MessageHandledContext`1.Canceled">
+            <summary>
+            Check if the message handling was canceled
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.MessageHandledContext`1.Exception">
+            <summary>
+            Check if there was an exception
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.MessageHandledContext`1.ExceptionHandled">
+            <summary>
+            Check if the exception if any was handled
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.FilterScope">
+            <summary>
+            Copy from ASP.NET mvc
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.FilterScope.First">
+            <summary>
+            The filter with this scope will be executed first, normally it's used in Global filters
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.FilterScope.Global">
+            <summary>
+            This scope is normally used in Global filter
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.FilterScope.Handler">
+            <summary>
+            This scope is normally used in Attribute base filter for the Handler 
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.FilterScope.Message">
+            <summary>
+            This scope is normally used in Attribute base filter for decrating on the Message itself
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.FilterScope.Action">
+            <summary>
+            This scope is normally used in Attribute base filter for the Handle method of the handlers
+            </summary>
+        </member>
+        <member name="F:Smartflow.Core.FilterScope.Last">
+            <summary>
+            The filter with this scope will be executed last, normally it's used in Global filters
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.CQRS.InternalBus">
+            <summary>
+            This implementation is inspired bu Craig Young's implementation in his CQRS example.
+            There should be 1 singleton object of this class in the system to act as the internal bus which can send/receive messages and deliver them
+            to the <see cref="T:Smartflow.Core.Tasks.LimitedConcurrencyLevelTaskScheduler"/>
+            </summary>
+        </member>
+        <member name="M:Smartflow.Core.CQRS.InternalBus.#ctor(Smartflow.Core.ILogger,Smartflow.Core.IHandlerInvoker)">
+            <summary>
+            Initialize an internal bus. This object should be singleton
+            </summary>
+            <param name="logger"></param>
+            <param name="handlerInvoker"> </param>
+        </member>
+        <member name="M:Smartflow.Core.CQRS.InternalBus.Send``1(``0)">
+            <summary>
+            Send a command
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="command"></param>
+        </member>
+        <member name="M:Smartflow.Core.CQRS.InternalBus.Publish``1(``0)">
+            <summary>
+            Publish an event
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="event"></param>
+        </member>
+        <member name="P:Smartflow.Core.CQRS.InternalBus.Current">
+            <summary>
+            The current internal bus
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.CQRS.InternalBus.MesageHandled">
+            <summary>
+            A callback method to handle once the message is handled
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.CQRS.Command">
+            <summary>
+            A command sender should send a Command to only 1 target which can handle it
+            In other words, a command should be handled by only 1 handler
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.CQRS.Command.Priority">
+            <summary>
+            A command should have a priority to be processed. The higher priority it is, the faster the command will be processed
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.CQRS.IDistributedMessage">
+            <summary>
+            A command or event that implements this interface can be deliverd to remote queue using RabbitMQ
+            Ofcourse it depends on the ICommandSender and IEventPublisher implementation to deal with that
+            <para>A message implement this interface should not have properties of type Action/Func</para>
+            <para>Message implements this interface must have parameterless constructor</para>
+            </summary>
+        </member>
+    </members>
+</doc>
