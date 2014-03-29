@@ -45,6 +45,9 @@ public class NewsArticleFound : Event
 
 ```c#
 HandlerProvider.Providers.RegisterHandler(new BingNewsSearchCommandHandler());
+HandlerProvider.Providers.RegisterHandler(new SaveNewsPostHandler());
+HandlerProvider.Providers.RegisterHandler(new PublishNewsArticleHandler());
+...
 ```
 
 3/ Send commands, publish events in your Program.cs
