@@ -12,7 +12,7 @@
 	<summary>Lightweight messaging framework to build CQRS style application for those who has been familiar with ASP.NET MVC</summary>    
 	<description>This module is an add-on to Smartflow to allow messages to be distributed to RabbitMQ priority queues</description>    <releaseNotes>https://github.com/vanthoainguyen/Smartflow/blob/master/nuget/Smartflow/CHANGELOG.txt</releaseNotes>
     <copyright>Copyright 2014</copyright>
-    <tags>Smartflow CQRS Event Command Messaging ASP.NET MVC</tags>
+    <tags>Smartflow CQRS Event Command Messaging ASP.NET MVC RabbitMQ Burrow.NET</tags>
     <dependencies>
 		<dependency id="Smartflow" version="1.0.1" />
 		<dependency id="Burrow.Extras" version="1.0.24" />
