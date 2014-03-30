@@ -4,7 +4,7 @@ using Smartflow.Core.CQRS;
 namespace Smartflow.Demo.BingNewsSearch
 {
     /// <summary>
-    /// Publish the post to websocket to display realtime search
+    /// Publish the post to websocket to display instant search
     /// </summary>
     public class PublishNewsArticleHandler : Handler<NewsArticleFound>
     {

@@ -96,12 +96,14 @@
     <Compile Include="TypeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>COPY /Y $(TargetDir)\Smartflow.Core.dll $(SolutionDir)nuget\Smartflow\lib\net40\
-COPY /Y $(TargetDir)\Smartflow.Core.xml $(SolutionDir)nuget\Smartflow\lib\net40\</PostBuildEvent>
+    <PostBuildEvent>COPY /Y $(TargetDir)Smartflow.Core.dll $(SolutionDir)nuget\Smartflow\lib\net40\
+COPY /Y $(TargetDir)Smartflow.Core.xml $(SolutionDir)nuget\Smartflow\lib\net40\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

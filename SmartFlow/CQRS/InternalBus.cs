@@ -53,10 +53,9 @@ namespace Smartflow.Core.CQRS
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="command"></param>
-        public void Send<T>(T command) where T : Command
+        public virtual void Send<T>(T command) where T : Command
         {
-            
-            var handlers = HandlerProvider.Providers.GetHandlers<T>().ToList();
+            var handlers = HandlerProvider.Providers.GetHandlers(command.GetType()).ToList();
 
             if (handlers.Count > 0)
             {
@@ -106,9 +105,9 @@ namespace Smartflow.Core.CQRS
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="event"></param>
-        public void Publish<T>(T @event) where T : Event
+        public virtual void Publish<T>(T @event) where T : Event
         {
-            var handlers = HandlerProvider.Providers.GetHandlers<T>();
+            var handlers = HandlerProvider.Providers.GetHandlers(@event.GetType());
             foreach (var handler in handlers)
             {
                 //dispatch on thread pool for added awesomeness

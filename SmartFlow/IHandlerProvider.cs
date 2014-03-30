@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Smartflow.Core.CQRS;
 
@@ -12,6 +13,6 @@ namespace Smartflow.Core
         /// Get all handlers for a message type
         /// </summary>
         /// <returns></returns>
-        IEnumerable<IHandler<T>> GetHandlers<T>() where T : class, IMessage;
+        IEnumerable<IHandler<IMessage>> GetHandlers(Type messageType);
     }
 }

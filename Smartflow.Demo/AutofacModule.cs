@@ -9,8 +9,6 @@ namespace Smartflow.Demo
     {
         protected override void Load(ContainerBuilder builder)
         {
-            log4net.Config.XmlConfigurator.Configure();
-
             builder.RegisterInstance(LogManager.GetLogger("")).As<ILog>().SingleInstance();
 
             builder.RegisterType<BingNewsSearcher>().As<IBingNewsSearcher>().SingleInstance();

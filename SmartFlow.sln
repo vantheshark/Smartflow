@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smartflow.Core", "SmartFlow
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smartflow.Demo", "Smartflow.Demo\Smartflow.Demo.csproj", "{1546BFC0-F7D2-428D-90CB-8010D2E7C73F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smartflow.RabbitMQ", "Smartflow.RabbitMQ\Smartflow.RabbitMQ.csproj", "{A4BD34C6-4526-4677-90D4-FD30DA9570C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,16 @@ Global
 		{1546BFC0-F7D2-428D-90CB-8010D2E7C73F}.Release|Mixed Platforms.Build.0 = Release|x86
 		{1546BFC0-F7D2-428D-90CB-8010D2E7C73F}.Release|x86.ActiveCfg = Release|x86
 		{1546BFC0-F7D2-428D-90CB-8010D2E7C73F}.Release|x86.Build.0 = Release|x86
+		{A4BD34C6-4526-4677-90D4-FD30DA9570C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4BD34C6-4526-4677-90D4-FD30DA9570C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4BD34C6-4526-4677-90D4-FD30DA9570C2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A4BD34C6-4526-4677-90D4-FD30DA9570C2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A4BD34C6-4526-4677-90D4-FD30DA9570C2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A4BD34C6-4526-4677-90D4-FD30DA9570C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4BD34C6-4526-4677-90D4-FD30DA9570C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4BD34C6-4526-4677-90D4-FD30DA9570C2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A4BD34C6-4526-4677-90D4-FD30DA9570C2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A4BD34C6-4526-4677-90D4-FD30DA9570C2}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,14 +8,14 @@ namespace Smartflow.Core
     {
         private static readonly Dictionary<Type, List<IHandler<IMessage>>> AllHandlers = new Dictionary<Type, List<IHandler<IMessage>>>();
 
-        public IEnumerable<IHandler<T>> GetHandlers<T>() where T : class, IMessage
+        public IEnumerable<IHandler<IMessage>> GetHandlers(Type messageType)
         {
             List<IHandler<IMessage>> handlers;
-            if (AllHandlers.TryGetValue(typeof(T), out handlers))
+            if (AllHandlers.TryGetValue(messageType, out handlers))
             {
                 return handlers;
             }
-            return new IHandler<T>[0];
+            return new IHandler<IMessage>[0];
         }
 
         /// <summary>
@@ -33,6 +33,6 @@ namespace Smartflow.Core
             }
 
             handlers.Add(new HandlerWrapper<T>(handler));
-        } 
+        }
     }
 }

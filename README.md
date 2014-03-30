@@ -44,7 +44,10 @@ public class NewsArticleFound : Event
 2/ Register handlers:
 
 ```c#
+// Register all handlers in your project
 HandlerProvider.Providers.RegisterHandler(new BingNewsSearchCommandHandler());
+HandlerProvider.Providers.RegisterHandler(new SaveNewsPostHandler());
+HandlerProvider.Providers.RegisterHandler(new PublishNewsArticleHandler());
 ```
 
 3/ Send commands, publish events in your Program.cs
@@ -82,7 +85,15 @@ public class AutofacDependencyResolver : IDependencyResolver
 
 	public T GetService<T>() where T : class
 	{
-		return _container.Resolve<T>();
+		try
+		{
+			return _container.Resolve<T>();
+		}
+		catch (Exception)
+		{
+			return null;
+		}
+		
 	}
 
 	public IEnumerable<T> GetServices<T>() where T : class
@@ -90,10 +101,28 @@ public class AutofacDependencyResolver : IDependencyResolver
 		return _container.Resolve<IEnumerable<T>>();
 	}
 
+	private static readonly Type EnumerableHandlers = typeof(IEnumerable<>);
 	public IEnumerable<object> GetServices(Type serviceType)
 	{
-		var svc =  _container.Resolve(serviceType);
-		return svc != null ? new[] {svc} : new object[0];
+		IEnumerable svcs;
+		try
+		{
+			var types = EnumerableHandlers.MakeGenericType(serviceType);
+			svcs = _container.Resolve(types) as IEnumerable;
+			if (svcs == null)
+			{
+				yield break;
+			}
+		}
+		catch (Exception)
+		{
+			yield break;
+		}
+			
+		foreach(var s in svcs)
+		{
+			yield return s;
+		}
 	}
 }
 

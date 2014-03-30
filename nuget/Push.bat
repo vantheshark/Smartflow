@@ -4,9 +4,9 @@
 DIR /B *.nupkg
 @echo:
 SETLOCAL
-SET VERSION=1.0.0
+SET VERSION=1.0.1
 pause
-nuget push Burrow.NET.%VERSION%.nupkg
+nuget push Smartflow.*.%VERSION%.nupkg
 
 pause
 ENDLOCAL

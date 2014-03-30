@@ -11,7 +11,7 @@ namespace Smartflow.Demo
     {
         private readonly ICommandSender _commandSender;
         private readonly ISearchAuditService _auditService;
-        private Timer t;
+        private Timer _timer;
         public MainService(ICommandSender commandSender, ISearchAuditService auditService)
         {
             _commandSender = commandSender;
@@ -26,9 +26,9 @@ namespace Smartflow.Demo
 
         protected override void OnStart(string[] args)
         {
-            t = new Timer(_ =>
+            _timer = new Timer(_ =>
             {
-                var trackingQuery = new [] {"#MH370", "Manchester United"};
+                var trackingQuery = new [] {"#MH370", "Tony Abbot", "Obama", "Putin", "Ukraina"};
 
                 var allAudit = _auditService.GetAll();
 
@@ -41,12 +41,12 @@ namespace Smartflow.Demo
                 }).ToList();
                 commands.ForEach(c => _commandSender.Send(c));
             });
-            t.Change(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20));
+            _timer.Change(TimeSpan.FromSeconds(1), TimeSpan.FromHours(20));
         }
 
         protected override void OnStop()
         {
-            t.Dispose();
+            _timer.Dispose();
         }
     }
 }

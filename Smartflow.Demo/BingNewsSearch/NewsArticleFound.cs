@@ -2,7 +2,7 @@
 
 namespace Smartflow.Demo.BingNewsSearch
 {
-    public class NewsArticleFound : Event
+    public class NewsArticleFound : Event, IDistributedMessage
     {
         public SearchResult Article { get; set; }
     }

@@ -60,7 +60,7 @@
             A provider to resolve all handlers for a message type
             </summary>
         </member>
-        <member name="M:Smartflow.Core.IHandlerProvider.GetHandlers``1">
+        <member name="M:Smartflow.Core.IHandlerProvider.GetHandlers(System.Type)">
             <summary>
             Get all handlers for a message type
             </summary>
@@ -768,11 +768,10 @@
             List of all registered <see cref="T:Smartflow.Core.IHandlerProvider"/>
             </summary>
         </member>
-        <member name="M:Smartflow.Core.HandlerProviderCollection.GetHandlers``1">
+        <member name="M:Smartflow.Core.HandlerProviderCollection.GetHandlers(System.Type)">
             <summary>
             Get all handlers from all registered <see cref="T:Smartflow.Core.IHandlerProvider"/>
             </summary>
-            <typeparam name="T"></typeparam>
             <returns></returns>
         </member>
         <member name="M:Smartflow.Core.HandlerProviderCollection.RegisterHandler``1(Smartflow.Core.CQRS.IHandler{``0})">

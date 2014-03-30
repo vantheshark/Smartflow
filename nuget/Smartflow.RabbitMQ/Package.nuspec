@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Smartflow.RabbitMQ</id>
+    <version>1.0.1</version>
+    <authors>Van Thoai Nguyen</authors>
+    <owners>Van Thoai Nguyen</owners>
+    <licenseUrl>http://sam.zoy.org/wtfpl/COPYING</licenseUrl>
+	<projectUrl>https://github.com/vanthoainguyen/Smartflow</projectUrl>	    
+	<iconUrl>http://oi60.tinypic.com/2mwcqq.jpg</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+	<summary>Lightweight messaging framework to build CQRS style application for those who has been familiar with ASP.NET MVC</summary>    
+	<description>This module is an add-on to Smartflow to allow messages to be distributed to RabbitMQ priority queues</description>    <releaseNotes>https://github.com/vanthoainguyen/Smartflow/blob/master/nuget/Smartflow/CHANGELOG.txt</releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>Smartflow CQRS Event Command Messaging ASP.NET MVC</tags>
+    <dependencies>
+		<dependency id="Smartflow" version="1.0.1" />
+		<dependency id="Burrow.Extras" version="1.0.24" />
+    </dependencies>
+  </metadata>
+</package>

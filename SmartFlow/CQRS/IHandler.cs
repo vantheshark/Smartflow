@@ -76,6 +76,9 @@ namespace Smartflow.Core.CQRS
     internal class HandlerWrapper : Handler<IMessage>
     {
         private readonly object _handler;
+        private static readonly Type GenericHandlerContextType = typeof (HandlerContext<>);
+        private static readonly Type GenericHandlerType = typeof(Handler<>);
+        private static readonly Type GenericHandlerInterfaceType = typeof(IHandler<>);
 
         public HandlerWrapper(object handler)
         {
@@ -88,14 +91,15 @@ namespace Smartflow.Core.CQRS
 
         public override void Handle(IMessage message)
         {
-            var type = typeof(HandlerContext<>);
             var handlerType = _handler.GetType();
-            if (handlerType.Is(typeof(Handler<>)))
+            //NOTE: Build the context if the handler inherit from class Handler<>
+            if (handlerType.Is(GenericHandlerType))
             {
-                var @interface = handlerType.GetInterfaces().FirstOrDefault(i => i.Is(typeof(IHandler<>)) && i.GetGenericArguments()[0] == message.GetType());
+                var messageType = message.GetType();
+                var @interface = handlerType.GetInterfaces().FirstOrDefault(i => i.Is(GenericHandlerInterfaceType) && i.GetGenericArguments()[0] == messageType);
                 if (@interface != null)
                 {
-                    type = type.MakeGenericType(message.GetType());
+                    var type = GenericHandlerContextType.MakeGenericType(messageType);
                     var context = (HandlerContext) Activator.CreateInstance(type, message, _handler);
                     context.MessageHandled = Context.MessageHandled;
                     context.MetaData = Context.MetaData;

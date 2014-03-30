@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Smartflow.RabbitMQ</name>
+    </assembly>
+    <members>
+        <member name="T:Smartflow.RabbitMQ.RabbitMqModule">
+            <summary>
+            Register this module to use RabbitMQ as the bus instead of <see cref="T:Smartflow.Core.CQRS.InternalBus"/>
+            </summary>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.RabbitMqModule.Load(Smartflow.RabbitMQ.LogicalPriorityMapper)">
+            <summary>
+            Init the module with provided <see cref="T:Smartflow.RabbitMQ.LogicalPriorityMapper"/>
+            </summary>
+            <param name="mapper"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.RabbitMqModule.Start">
+            <summary>
+            Start subscribing to the priority queues
+            </summary>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.RabbitMqModule.WithConfig(System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Init the module from App.Config
+            </summary>
+            <param name="collection"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Smartflow.RabbitMQ.RabbitMqModule.MessageQueueConnectionString">
+            <summary>
+            Message queue connection string
+            </summary>
+        </member>
+        <member name="P:Smartflow.RabbitMQ.RabbitMqModule.Environment">
+            <summary>
+            The environment value, can be DEV, UAT, PROD. It will be a part of you RabbitMQ exchange and queue names
+            </summary>
+        </member>
+        <member name="P:Smartflow.RabbitMQ.RabbitMqModule.SetupQueues">
+            <summary>
+            Set to true to let the library create the queue for you
+            </summary>
+        </member>
+        <member name="T:Smartflow.RabbitMQ.SmartflowMessage">
+            <summary>
+            This is just a wrapper of IDistributedMessage to send to RabbitMQ queues
+            </summary>
+        </member>
+        <member name="T:Smartflow.RabbitMQ.LogicalPriorityMapper">
+            <summary>
+            Implement this interface to provide a mapping logic of converting any logical uint priority using in the application to phisical rabbitMQ priority queue
+            </summary>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.LogicalPriorityMapper.GetQueuePriority(System.UInt32)">
+            <summary>
+            Get the priority value of the queue for the provided message priority
+            </summary>
+            <param name="logicalPriority"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

@@ -1,8 +1,9 @@
 using System;
 
+#pragma warning disable 1591
 namespace Smartflow.Core
 {
-    internal class NullLogger : ILogger
+    public class NullLogger : ILogger
     {
         public bool IsDebugEnabled
         {
@@ -205,3 +206,4 @@ namespace Smartflow.Core
         }
     }
 }
+#pragma warning restore 1591

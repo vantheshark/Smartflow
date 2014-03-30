@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Smartflow.Core.CQRS;
@@ -12,13 +13,12 @@ namespace Smartflow.Core
         /// <summary>
         /// Get all handlers from all registered <see cref="IHandlerProvider"/>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IEnumerable<IHandler<T>> GetHandlers<T>() where T : class, IMessage
+        public IEnumerable<IHandler<IMessage>> GetHandlers(Type messageType)
         {
             foreach(var handlerProvider in this)
             {
-                foreach(var handler in handlerProvider.GetHandlers<T>())
+                foreach(var handler in handlerProvider.GetHandlers(messageType))
                 {
                     yield return handler;
                 }
@@ -39,6 +39,6 @@ namespace Smartflow.Core
                 Add(defaultProvider);
             }
             defaultProvider.RegisterHandler(handler);
-        } 
+        }
     }
 }
