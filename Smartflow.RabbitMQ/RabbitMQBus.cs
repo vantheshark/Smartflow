@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading;
+using System.Threading.Tasks;
 using Burrow;
 using Burrow.Extras;
 using Burrow.Extras.Internal;
@@ -9,22 +10,34 @@ using Smartflow.Core.CQRS;
 
 namespace Smartflow.RabbitMQ
 {
+    /// <summary>
+    /// The bus implementation using RabbitMQ and Burrow.NET
+    /// </summary>
     public class RabbitMqBus : ICommandSender, IEventPublisher, IDisposable
     {
         private readonly ILogger _logger;
         private readonly InternalBus _internalBus;
         private readonly LogicalPriorityMapper _priorityMapper;
-        private readonly SmartflowRouteFinder _routeFinder;
+        private IRouteFinder _routeFinder;
 
         private readonly string _connectionString;
         private readonly uint _maxPriority;
         private readonly bool _setupQueues;
-        private readonly ITunnelWithPrioritySupport _tunnel;
+        private ITunnelWithPrioritySupport _tunnel;
         private volatile CompositeSubscription _subscription;
         private readonly ConcurrentDictionary<IMessage, MessageDeliverEventArgs> _cache = new ConcurrentDictionary<IMessage, MessageDeliverEventArgs>();
         private Semaphore _sem;
         private readonly ManualResetEvent _waitToStart = new ManualResetEvent(false);
 
+        /// <summary>
+        /// Initialize the bus
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="internalBus"></param>
+        /// <param name="priorityMapper"></param>
+        /// <param name="connectionString"></param>
+        /// <param name="environment"></param>
+        /// <param name="setupQueues"></param>
         public RabbitMqBus(ILogger logger, InternalBus internalBus, LogicalPriorityMapper priorityMapper, string connectionString, string environment, bool setupQueues = false)
         {
             _logger = logger;
@@ -34,12 +47,21 @@ namespace Smartflow.RabbitMQ
             _maxPriority = _priorityMapper.GetQueuePriority(int.MaxValue);
             _setupQueues = setupQueues;
             _routeFinder = new SmartflowRouteFinder(environment);
-            _tunnel = RabbitTunnel.Factory.WithPrioritySupport()
-                                  .Create(_connectionString).WithPrioritySupport();
-            _tunnel.SetRouteFinder(_routeFinder);
-            _tunnel.SetSerializer(new JsonSerializer());
         }
 
+        /// <summary>
+        /// Change the route finder
+        /// </summary>
+        /// <param name="routeFinder"></param>
+        public void SetRouteFinder(IRouteFinder routeFinder)
+        {
+            _routeFinder = routeFinder;
+        }
+
+        /// <summary>
+        /// Count all messages from all the queues
+        /// </summary>
+        /// <returns></returns>
         public uint GetMessageCount()
         {
             return _tunnel.GetMessageCount(new PrioritySubscriptionOption<SmartflowMessage>
@@ -48,6 +70,11 @@ namespace Smartflow.RabbitMQ
             });
         }
 
+        /// <summary>
+        /// Send the distributed command
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="command"></param>
         public void Send<T>(T command) where T : Command
         {
             if (command is IDistributedMessage)
@@ -63,6 +90,22 @@ namespace Smartflow.RabbitMQ
             }
         }
 
+        /// <summary>
+        /// Execute a query for result immediately
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public Task<T> Query<T>(Query<T> query)
+        {
+            return _internalBus.Query(query);
+        }
+
+        /// <summary>
+        /// Publish the distributed event
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="event"></param>
         public void Publish<T>(T @event) where T : Event
         {
             if (@event is IDistributedMessage)
@@ -78,12 +121,21 @@ namespace Smartflow.RabbitMQ
             }
         }
 
+        /// <summary>
+        /// Start the bus
+        /// </summary>
         public virtual void Start()
         {
+            _tunnel = RabbitTunnel.Factory.WithPrioritySupport()
+                                  .Create(_connectionString).WithPrioritySupport();
+            _tunnel.SetRouteFinder(_routeFinder);
+            _tunnel.SetSerializer(new JsonSerializer());
+
             if (_setupQueues)
             {
-                _routeFinder.CreateRoutes<SmartflowMessage>(_connectionString, _maxPriority);
+                CreateRoutes<SmartflowMessage>(_connectionString, _maxPriority);
             }
+
 
             _sem = new Semaphore(Burrow.Global.DefaultConsumerBatchSize, Burrow.Global.DefaultConsumerBatchSize);
 
@@ -114,6 +166,9 @@ namespace Smartflow.RabbitMQ
             };
         }
 
+        /// <summary>
+        /// Create Burrow.NET subscription to the queues
+        /// </summary>
         protected virtual void CreateSubscription()
         {
             var name = string.Format("BuzzPollMonitor.{0}", Environment.MachineName);
@@ -149,6 +204,26 @@ namespace Smartflow.RabbitMQ
             });
         }
 
+        /// <summary>
+        /// Create the required exchange and queues
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="connectionString"></param>
+        /// <param name="maxPriority"></param>
+        private void CreateRoutes<T>(string connectionString, uint maxPriority)
+        {
+            var setup = new PriorityQueuesRabbitSetup(connectionString);
+            setup.CreateRoute<T>(new RouteSetupData
+            {
+                RouteFinder = _routeFinder,
+                ExchangeSetupData = new HeaderExchangeSetupData(),
+                QueueSetupData = new PriorityQueueSetupData(maxPriority)
+            });
+        }
+
+        /// <summary>
+        /// Dispose the RabbitMQ bus
+        /// </summary>
         public virtual void Dispose()
         {
             if (_sem != null)

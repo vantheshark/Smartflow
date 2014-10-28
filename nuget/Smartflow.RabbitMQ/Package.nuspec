@@ -14,8 +14,8 @@
     <copyright>Copyright 2014</copyright>
     <tags>Smartflow CQRS Event Command Messaging ASP.NET MVC RabbitMQ Burrow.NET</tags>
     <dependencies>
-		<dependency id="Smartflow" version="1.0.1" />
-		<dependency id="Burrow.Extras" version="1.0.24" />
+		<dependency id="Smartflow" version="1.0.2" />
+		<dependency id="Burrow.Extras" version="1.0.28" />
     </dependencies>
   </metadata>
 </package>

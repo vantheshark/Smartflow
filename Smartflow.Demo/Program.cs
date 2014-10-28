@@ -20,8 +20,8 @@ namespace Smartflow.Demo
         {
             log4net.Config.XmlConfigurator.Configure();
 
-            var service = BasicInit();
-            //var service = InitWithAutofacDependencyInjection();
+            //var service = BasicInit();
+            var service = InitWithAutofacDependencyInjection();
             //var service = InitWithRabbitMqAndAutofac();
             
             if (!Environment.UserInteractive)

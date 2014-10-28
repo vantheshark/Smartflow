@@ -65,7 +65,7 @@ namespace Smartflow.Core.Tasks
         /// <summary>
         /// Highest priority, any message with this priority once scheduled with the InternalBus will be sent to the Scheduler to execute straight away
         /// </summary>
-        OnDemand = uint.MaxValue
+        Highest = uint.MaxValue
     }
 }
 

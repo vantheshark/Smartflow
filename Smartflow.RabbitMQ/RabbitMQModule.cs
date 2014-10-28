@@ -2,8 +2,10 @@
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Globalization;
+using Burrow;
 using Smartflow.Core;
 using Smartflow.Core.CQRS;
+using Global = Smartflow.Core.Global;
 
 namespace Smartflow.RabbitMQ
 {
@@ -31,12 +33,17 @@ namespace Smartflow.RabbitMQ
         /// Init the module with provided <see cref="LogicalPriorityMapper"/>
         /// </summary>
         /// <param name="mapper"></param>
+        /// <param name="routeFinder">custom route finder</param>
         /// <returns></returns>
-        public RabbitMqModule Load(LogicalPriorityMapper mapper)
+        public RabbitMqModule Load(LogicalPriorityMapper mapper, IRouteFinder routeFinder = null)
         {
             var internalBus = InternalBus.Current;
             var logger = DependencyResolver.Current.GetService<ILogger>() ?? new NullLogger();
             _rabbitBus = new RabbitMqBus(logger, internalBus, mapper, MessageQueueConnectionString, Environment, SetupQueues);
+            if (routeFinder != null)
+            {
+                _rabbitBus.SetRouteFinder(routeFinder);
+            }
             InternalBus.Current = new RabbitMqBusAdapter(_rabbitBus);
 
             Global.PendingJobCount = _rabbitBus.GetMessageCount;
