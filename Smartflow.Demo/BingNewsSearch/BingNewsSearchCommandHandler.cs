@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Smartflow.Core.CQRS;
 using log4net;
+using Smartflow.Demo.Common;
 
 namespace Smartflow.Demo.BingNewsSearch
 {
@@ -9,7 +12,7 @@ namespace Smartflow.Demo.BingNewsSearch
     /// Search all public posts that have photo and specific #hashtag
     /// </summary>
     [HandlerPerformanceLogFilter]
-    public class BingNewsSearchCommandHandler : Handler<NewsSearchCommand>
+    public class BingNewsSearchCommandHandler : AsyncCommandHandler<NewsSearchCommand>
     {
         private readonly ISearchAuditService _auditService;
         private readonly IBingNewsSearcher _searcher;
@@ -22,10 +25,11 @@ namespace Smartflow.Demo.BingNewsSearch
             _logger = logger;
         }
 
-        public override void Handle(NewsSearchCommand message)
+        public override async Task<IEnumerable<Event>> HandleAsync(NewsSearchCommand message)
         {
             // Search
-            var result = _searcher.Search(message.Query);
+            var result = await _searcher.SearchAsync(message.Query);
+            var events = new List<Event>();
             if (result != null && result.Data != null && result.Data.Length > 0)
             {
                 if (message.LatestArticleDate > DateTime.MinValue)
@@ -43,7 +47,7 @@ namespace Smartflow.Demo.BingNewsSearch
                 foreach (var p in result.Data)
                 {
                     // Publish post found
-                    EventPublisher.Publish(new NewsArticleFound
+                    events.Add(new NewsArticleFound
                     {
                         Article = p,
                         Priority = message.Priority + 1
@@ -60,6 +64,7 @@ namespace Smartflow.Demo.BingNewsSearch
                     });
                 }
             }
+            return events;
         }
     }
 }

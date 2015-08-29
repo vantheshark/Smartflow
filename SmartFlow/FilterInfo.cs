@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using Smartflow.Core.CQRS;
 
 namespace Smartflow.Core
@@ -33,8 +32,6 @@ namespace Smartflow.Core
         {
             foreach (var filter in filters)
             {
-                Contract.Assert(filter != null);
-
                 var actionFilter = filter.Instance as IMessageFilter;
                 if (actionFilter != null)
                 {

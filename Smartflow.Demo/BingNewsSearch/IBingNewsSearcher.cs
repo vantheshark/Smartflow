@@ -1,8 +1,10 @@
 ﻿
+using System.Threading.Tasks;
+
 namespace Smartflow.Demo.BingNewsSearch
 {
     public interface IBingNewsSearcher
     {
-        BingNewsSearchPage Search(string searchKeyword);
+        Task<BingNewsSearchPage> SearchAsync(string searchKeyword);
     }
 }

@@ -2,6 +2,7 @@
 using log4net;
 using Smartflow.Core.CQRS;
 using Smartflow.Demo.BingNewsSearch;
+using Smartflow.Demo.Common;
 
 namespace Smartflow.Demo
 {
@@ -19,11 +20,11 @@ namespace Smartflow.Demo
 
             builder.RegisterType<SearchAuditService>().As<ISearchAuditService>().SingleInstance();
 
-            builder.RegisterType<BingNewsSearchCommandHandler>().As<IHandler<NewsSearchCommand>>().InstancePerDependency();
+            builder.RegisterType<BingNewsSearchCommandHandler>().As<ICommandHandler<NewsSearchCommand>>().InstancePerDependency();
 
-            builder.RegisterType<PublishNewsArticleHandler>().As<IHandler<NewsArticleFound>>().InstancePerDependency();
-            
-            builder.RegisterType<SaveNewsPostHandler>().As<IHandler<NewsArticleFound>>().InstancePerDependency();
+            builder.RegisterType<PublishNewsArticleHandler>().As<IEventHandler<NewsArticleFound>>().InstancePerDependency();
+
+            builder.RegisterType<SaveNewsPostHandler>().As<IEventHandler<NewsArticleFound>>().InstancePerDependency();
         }
     }
 }

@@ -45,7 +45,7 @@ namespace Smartflow.Core.CQRS
         public InternalBus(ILogger logger, IHandlerInvoker handlerInvoker)
         {
             _logger = logger ?? DependencyResolver.Current.GetService<ILogger>() ?? new NullLogger();
-            _handlerInvoker = handlerInvoker ?? DependencyResolver.Current.GetService<IHandlerInvoker>() ?? new DefaultHandlerInvoker();
+            _handlerInvoker = handlerInvoker ?? DependencyResolver.Current.GetService<IHandlerInvoker>() ?? new DefaultHandlerInvoker(this);
         }
         
         /// <summary>
@@ -55,50 +55,44 @@ namespace Smartflow.Core.CQRS
         /// <param name="command"></param>
         public virtual void Send<T>(T command) where T : Command
         {
-            var handlers = HandlerProvider.Providers.GetHandlers(command.GetType()).ToList();
-
+            var handlers = HandlerProvider.Providers.GetCommandHandlers<T>().ToList();
+            Action a = null;
             if (handlers.Count > 0)
             {
                 if (handlers.Count != 1)
-                    throw new InvalidOperationException("cannot send to more than one handler");
-                var handler1 = handlers[0];
-
-                var priorityTask = new PriorityTask(() =>
                 {
-                    try
-                    {
-                        _handlerInvoker.InvokeHandler(handler1, command);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error(ex);
-                    }
-                    finally 
-                    {
-                        if (MesageHandled != null)
-                        {
-                            try
-                            {
-                                MesageHandled(command);
-                            }
-                            catch (Exception ex)
-                            {
-                                _logger.Error(ex);
-                            }
-                        }
-                    }
-                });
-
-                priorityTask.OnDemand = command.Priority == (uint)MessagePriority.OnDemand;
-                priorityTask.Priority = command.Priority;
-                priorityTask.Start(PriorityTask.Factory.Scheduler);
+                    throw new InvalidOperationException(string.Format("Cannot send {0} to more than one handler",
+                        typeof (T).Name));
+                }
+                var syncHandler = handlers[0];
+                a = () => { _handlerInvoker.InvokeHandler(syncHandler, command); };
             }
-            else
+
+            if (a == null)
             {
-                throw new InvalidOperationException("no handler registered");
+                var asyncHandlers = HandlerProvider.Providers.GetAsyncCommandHandlers<T>().ToList();
+                if (asyncHandlers.Count > 0)
+                {
+                    if (asyncHandlers.Count != 1)
+                    {
+                        throw new InvalidOperationException(string.Format("Cannot send {0} to more than one handler", typeof(T).Name));
+                    }
+                    var asyncHandler = asyncHandlers[0];
+                    a = async () => await _handlerInvoker.InvokeHandlerAsync(asyncHandler, command).ConfigureAwait(false);
+                }
             }
-        }
 
+            if (a == null)
+            {
+                throw new InvalidOperationException("no handler registered for " + typeof(T).Name);
+            }
+            
+            var priorityTask = CreatePriorityTask(command, a);
+
+            priorityTask.OnDemand = command.Priority == (uint)MessagePriority.OnDemand;
+            priorityTask.Priority = command.Priority;
+            priorityTask.Start(PriorityTask.Factory.Scheduler);
+        }
 
         /// <summary>
         /// Publish an event
@@ -107,42 +101,57 @@ namespace Smartflow.Core.CQRS
         /// <param name="event"></param>
         public virtual void Publish<T>(T @event) where T : Event
         {
-            var handlers = HandlerProvider.Providers.GetHandlers(@event.GetType());
+            var handlers = HandlerProvider.Providers.GetEventHandlers<T>(@event.GetType());
             foreach (var handler in handlers)
             {
-                //dispatch on thread pool for added awesomeness
-                var handler1 = handler;
-                var priorityTask = new PriorityTask(() =>
-                {
-                    try
-                    {
-                        _handlerInvoker.InvokeHandler(handler1, @event);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error(ex);
-                    }
-                    finally
-                    {
-                        if (MesageHandled != null)
-                        {
-                            try
-                            {
-                                //NOTE: This can be fired many times for 1 event object as the event can have many handlers
-                                MesageHandled(@event);
-                            }
-                            catch (Exception ex)
-                            {
-                                _logger.Error(ex);
-                            }
-                        }
-                    }
-                });
+                var h = handler;
+                var priorityTask = CreatePriorityTask(@event, () => { h.Handle(@event); });
 
                 priorityTask.OnDemand = @event.Priority == (uint)MessagePriority.OnDemand;
                 priorityTask.Priority = @event.Priority;
                 priorityTask.Start(PriorityTask.Factory.Scheduler);
             }
+
+            var asyncHandlers = HandlerProvider.Providers.GetAsyncEventHandlers<T>(@event.GetType());
+            foreach (var handler in asyncHandlers)
+            {
+                var h = handler;
+                var priorityTask = CreatePriorityTask(@event, async () => { await h.HandleAsync(@event).ConfigureAwait(false); });
+                priorityTask.OnDemand = @event.Priority == (uint)MessagePriority.OnDemand;
+                priorityTask.Priority = @event.Priority;
+                priorityTask.Start(PriorityTask.Factory.Scheduler);
+            }
+        }
+
+        private PriorityTask CreatePriorityTask(IMessage message, Action a)
+        {
+            var priorityTask = new PriorityTask(() =>
+            {
+                try
+                {
+                    a();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                }
+                finally
+                {
+                    if (MesageHandled != null)
+                    {
+                        try
+                        {
+                            //NOTE: This can be fired many times for 1 event object as the event can have many handlers
+                            MesageHandled(message);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error(ex);
+                        }
+                    }
+                }
+            });
+            return priorityTask;
         }
     }
 }

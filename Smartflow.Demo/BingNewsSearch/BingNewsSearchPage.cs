@@ -1,4 +1,4 @@
-﻿
+﻿using Smartflow.Demo.Common;
 
 namespace Smartflow.Demo.BingNewsSearch
 {

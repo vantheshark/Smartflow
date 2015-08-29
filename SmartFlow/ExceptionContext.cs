@@ -22,31 +22,18 @@ namespace Smartflow.Core
             Exception = exception;
             MetaData = handlerContext.MetaData;
             MessageHandled = handlerContext.MessageHandled;
-            _handlerType = handlerContext.HandlerType;
-            _messageType = handlerContext.MessageType;
+            HandlerType = handlerContext.HandlerType;
+            MessageType = handlerContext.MessageType;
         }
 
         /// <summary>
         /// The exception
         /// </summary>
-        public virtual Exception Exception { get; set; }
+        public Exception Exception { get; set; }
 
         /// <summary>
         /// Determine whether the exception was handled
         /// </summary>
         public bool ExceptionHandled { get; set; }
-
-        private readonly Type _handlerType;
-        private readonly Type _messageType;
-
-        /// <summary>
-        /// The type of the handler
-        /// </summary>
-        public override Type HandlerType { get { return _handlerType; }}
-
-        /// <summary>
-        /// The type of the message
-        /// </summary>
-        public override Type MessageType { get { return _messageType; }}
     }
 }

@@ -6,6 +6,7 @@ using Burrow.Extras;
 using Burrow.Extras.Internal;
 using Smartflow.Core;
 using Smartflow.Core.CQRS;
+using Global = Burrow.Global;
 
 namespace Smartflow.RabbitMQ
 {
@@ -85,7 +86,7 @@ namespace Smartflow.RabbitMQ
                 _routeFinder.CreateRoutes<SmartflowMessage>(_connectionString, _maxPriority);
             }
 
-            _sem = new Semaphore(Burrow.Global.DefaultConsumerBatchSize, Burrow.Global.DefaultConsumerBatchSize);
+            _sem = new Semaphore(Global.DefaultConsumerBatchSize, Global.DefaultConsumerBatchSize);
 
             CreateSubscription();
 

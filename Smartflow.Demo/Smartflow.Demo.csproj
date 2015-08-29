@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Smartflow.Demo</RootNamespace>
     <AssemblyName>Smartflow.Demo</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -33,6 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -63,15 +65,15 @@
   <ItemGroup>
     <Compile Include="AutofacDependencyResolver.cs" />
     <Compile Include="AutofacModule.cs" />
-    <Compile Include="BingNewsSearch\SearchResult.cs" />
-    <Compile Include="BingNewsSearch\NewsArticleFound.cs" />
-    <Compile Include="BingNewsSearch\NewsSearchAudit.cs" />
-    <Compile Include="BingNewsSearch\NewsSearchCommand.cs" />
+    <Compile Include="Common\SearchResult.cs" />
+    <Compile Include="Common\NewsArticleFound.cs" />
+    <Compile Include="Common\NewsSearchAudit.cs" />
+    <Compile Include="Common\NewsSearchCommand.cs" />
     <Compile Include="BingNewsSearch\BingNewsSearchCommandHandler.cs" />
     <Compile Include="BingNewsSearch\BingNewsSearcher.cs" />
     <Compile Include="BingNewsSearch\BingNewsSearchPage.cs" />
     <Compile Include="BingNewsSearch\BingNewsSearchUrlBuilder.cs" />
-    <Compile Include="BingNewsSearch\ISearchAuditService.cs" />
+    <Compile Include="Common\ISearchAuditService.cs" />
     <Compile Include="BingNewsSearch\IBingNewsSearcher.cs" />
     <Compile Include="ConsoleLogMessageFilter.cs" />
     <Compile Include="IRepository.cs" />
@@ -82,14 +84,17 @@
     <Compile Include="MainService.Designer.cs">
       <DependentUpon>MainService.cs</DependentUpon>
     </Compile>
-    <Compile Include="BingNewsSearch\SearchAuditService.cs" />
+    <Compile Include="Common\SearchAuditService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BingNewsSearch\PublishNewsArticleHandler.cs" />
-    <Compile Include="BingNewsSearch\SaveNewsPostHandler.cs" />
+    <Compile Include="Common\PublishNewsArticleHandler.cs" />
+    <Compile Include="Common\SaveNewsPostHandler.cs" />
+    <Compile Include="RssSearch\FeedSearchCommand.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

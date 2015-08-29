@@ -4,8 +4,10 @@ using System.IO;
 using System.Net;
 using System.ServiceModel.Syndication;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using log4net;
+using Smartflow.Demo.Common;
 
 namespace Smartflow.Demo.BingNewsSearch
 {
@@ -18,7 +20,7 @@ namespace Smartflow.Demo.BingNewsSearch
             _logger = logger;
         }
 
-        public BingNewsSearchPage Search(string searchKeyword)
+        public async Task<BingNewsSearchPage> SearchAsync(string searchKeyword)
         {
             var pageUrl = BingNewsSearchUrlBuilder.BuildSearchUrl(searchKeyword);
 
@@ -29,7 +31,7 @@ namespace Smartflow.Demo.BingNewsSearch
                 request.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate");
                 request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
-                using (var apiResponse = (HttpWebResponse)request.GetResponse())
+                using (var apiResponse = (HttpWebResponse) await request.GetResponseAsync().ConfigureAwait(false))
                 using (var apiResponseStream = apiResponse.GetResponseStream())
                 {
                     if (apiResponseStream == null)
@@ -38,7 +40,7 @@ namespace Smartflow.Demo.BingNewsSearch
                     }
                     using (var loResponseStream = new StreamReader(apiResponseStream))
                     {
-                        var xmlData = loResponseStream.ReadToEnd();
+                        var xmlData = await loResponseStream.ReadToEndAsync().ConfigureAwait(false);
                         var result = ParseResult(xmlData);
                         result.SearchedKeyword = searchKeyword;
                         return result;

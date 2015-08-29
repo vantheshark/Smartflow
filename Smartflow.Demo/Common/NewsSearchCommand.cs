@@ -1,7 +1,7 @@
 ﻿using System;
 using Smartflow.Core.CQRS;
 
-namespace Smartflow.Demo.BingNewsSearch
+namespace Smartflow.Demo.Common
 {
     public class NewsSearchCommand : Command, IDistributedMessage
     {

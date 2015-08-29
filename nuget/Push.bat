@@ -6,7 +6,8 @@ DIR /B *.nupkg
 SETLOCAL
 SET VERSION=1.0.1
 pause
-nuget push Smartflow.*.%VERSION%.nupkg
+nuget push Smartflow.%VERSION%.nupkg
+nuget push Smartflow.RabbitMQ.%VERSION%.nupkg
 
 pause
 ENDLOCAL

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Smartflow.Core;
-using Smartflow.Demo.BingNewsSearch;
+using Smartflow.Demo.Common;
 
 namespace Smartflow.Demo
 {
@@ -41,7 +41,7 @@ namespace Smartflow.Demo
         public void OnMessageExecuted(MessageHandledContext<NewsSearchCommand> context)
         {
             _stopwatch.Stop();
-            Console.WriteLine(string.Format("Search {0} in {1:##}s", context.Message.Query, _stopwatch.Elapsed.TotalSeconds));
+            Console.WriteLine("Search {0} in {1:#.##}s", context.Message.Query, _stopwatch.Elapsed.TotalSeconds);
         }
     }
 }

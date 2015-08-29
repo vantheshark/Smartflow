@@ -11,26 +11,86 @@ namespace Smartflow.Core
     public class HandlerProviderCollection : List<IHandlerProvider>, IHandlerProvider
     {
         /// <summary>
-        /// Get all handlers from all registered <see cref="IHandlerProvider"/>
+        /// Get all command handlers from all registered <see cref="IHandlerProvider"/>
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IHandler<IMessage>> GetHandlers(Type messageType)
+        public IEnumerable<ICommandHandler<T>> GetCommandHandlers<T>() where T : Command
         {
-            foreach(var handlerProvider in this)
-            {
-                foreach(var handler in handlerProvider.GetHandlers(messageType))
-                {
-                    yield return handler;
-                }
-            }
+            return this.SelectMany(handlerProvider => handlerProvider.GetCommandHandlers<T>());
         }
 
         /// <summary>
-        /// Register a handler
+        /// Get all async command handlers from all registered <see cref="IHandlerProvider"/>
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<IAsyncCommandHandler<T>> GetAsyncCommandHandlers<T>() where T : Command
+        {
+            return this.SelectMany(handlerProvider => handlerProvider.GetAsyncCommandHandlers<T>());
+        }
+
+        /// <summary>
+        /// Get all event handlers from all registered <see cref="IHandlerProvider"/>
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<IEventHandler<T>> GetEventHandlers<T>(Type eventType) where T : Event
+        {
+            return this.SelectMany(handlerProvider => handlerProvider.GetEventHandlers<T>(eventType));
+        }
+
+        /// <summary>
+        /// Get all async event handlers from all registered <see cref="IHandlerProvider"/>
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<IAsyncEventHandler<T>> GetAsyncEventHandlers<T>(Type eventType) where T : Event
+        {
+            return this.SelectMany(handlerProvider => handlerProvider.GetAsyncEventHandlers<T>(eventType));
+        }
+
+        /// <summary>
+        /// Register a command handler
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="handler"></param>
-        public void RegisterHandler<T>(IHandler<T> handler) where T : class, IMessage
+        public void RegisterCommandHandler<T>(ICommandHandler<T> handler) where T : Command
+        {
+            var defaultProvider = DefaultHandlerProvider();
+            defaultProvider.RegisterCommandHandler(handler);
+        }
+
+        /// <summary>
+        /// Register an async command handler
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="handler"></param>
+        public void RegisterCommandHandler<T>(IAsyncCommandHandler<T> handler) where T : Command
+        {
+            var defaultProvider = DefaultHandlerProvider();
+            defaultProvider.RegisterCommandHandler(handler);
+        }
+
+        /// <summary>
+        /// Register an event handler
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="handler"></param>
+        public void RegisterEventHandler<T>(IEventHandler<T> handler) where T : Event
+        {
+            var defaultProvider = DefaultHandlerProvider();
+            defaultProvider.RegisterEventHandler(handler);
+        }
+
+        /// <summary>
+        /// Register an async event handler
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="handler"></param>
+        public void RegisterEventHandler<T>(IAsyncEventHandler<T> handler) where T : Event
+        {
+            var defaultProvider = DefaultHandlerProvider();
+            defaultProvider.RegisterEventHandler(handler);
+        }
+
+        private DefaultHandlerProvider DefaultHandlerProvider()
         {
             var defaultProvider = this.FirstOrDefault(p => p is DefaultHandlerProvider) as DefaultHandlerProvider;
             if (defaultProvider == null)
@@ -38,7 +98,7 @@ namespace Smartflow.Core
                 defaultProvider = new DefaultHandlerProvider();
                 Add(defaultProvider);
             }
-            defaultProvider.RegisterHandler(handler);
+            return defaultProvider;
         }
     }
 }

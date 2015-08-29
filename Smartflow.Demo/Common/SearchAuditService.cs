@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-
-namespace Smartflow.Demo.BingNewsSearch
+namespace Smartflow.Demo.Common
 {
     public class SearchAuditService : ISearchAuditService
     {

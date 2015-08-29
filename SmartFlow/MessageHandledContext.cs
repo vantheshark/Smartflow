@@ -16,8 +16,10 @@ namespace Smartflow.Core
         /// <param name="canceled"></param>
         /// <param name="exception"></param>
         public MessageHandledContext(HandlerContext<T> handlerContext, bool canceled, Exception exception)
-            : base(handlerContext.Message, handlerContext.Handler)
         {
+            
+            Message = handlerContext.Message;
+            MessageType = handlerContext.MessageType;
             Canceled = canceled;
             Exception = exception;
             MetaData = handlerContext.MetaData;
@@ -27,12 +29,12 @@ namespace Smartflow.Core
         /// <summary>
         /// Check if the message handling was canceled
         /// </summary>
-        public virtual bool Canceled { get; set; }
+        public bool Canceled { get; set; }
 
         /// <summary>
         /// Check if there was an exception
         /// </summary>
-        public virtual Exception Exception { get; set; }
+        public Exception Exception { get; set; }
 
         /// <summary>
         /// Check if the exception if any was handled

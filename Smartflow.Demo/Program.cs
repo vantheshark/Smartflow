@@ -6,6 +6,7 @@ using Autofac;
 using Smartflow.Core;
 using Smartflow.Core.CQRS;
 using Smartflow.Demo.BingNewsSearch;
+using Smartflow.Demo.Common;
 using Smartflow.RabbitMQ;
 
 namespace Smartflow.Demo
@@ -46,13 +47,13 @@ namespace Smartflow.Demo
 
             var logger = log4net.LogManager.GetLogger(typeof(Program));
 
-            HandlerProvider.Providers.RegisterHandler(new BingNewsSearchCommandHandler(new SearchAuditService(new InMemoryDatabase<NewsSearchAudit>()), 
+            HandlerProvider.Providers.RegisterCommandHandler(new BingNewsSearchCommandHandler(new SearchAuditService(new InMemoryDatabase<NewsSearchAudit>()), 
                                                                                        new BingNewsSearcher(logger), 
                                                                                        logger));
 
-            HandlerProvider.Providers.RegisterHandler(new SaveNewsPostHandler(new InMemoryDatabase<NewsArticleFound>()));
-            
-            HandlerProvider.Providers.RegisterHandler(new PublishNewsArticleHandler(logger));
+            HandlerProvider.Providers.RegisterEventHandler(new SaveNewsPostHandler(new InMemoryDatabase<NewsArticleFound>()));
+
+            HandlerProvider.Providers.RegisterEventHandler(new PublishNewsArticleHandler(logger));
 
             return new MainService(InternalBus.Current, new SearchAuditService(new InMemoryDatabase<NewsSearchAudit>()));
         }

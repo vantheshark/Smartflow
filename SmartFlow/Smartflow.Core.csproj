@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Smartflow.Core</RootNamespace>
     <AssemblyName>Smartflow.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Smartflow.Core.xml</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +33,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Smartflow.Core.xml</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="C5">
@@ -47,7 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CQRS\MessageHandler.cs" />
+    <Compile Include="CQRS\ICommandHandler.cs" />
+    <Compile Include="CQRS\IEventHandler.cs" />
+    <Compile Include="CQRS\IMessageHandler.cs" />
     <Compile Include="DefaultHandlerInvoker.cs" />
     <Compile Include="DefaultHandlerProvider.cs" />
     <Compile Include="DependencyResolver.cs" />
@@ -78,7 +83,7 @@
     <Compile Include="CQRS\Event.cs" />
     <Compile Include="CQRS\ICommandSender.cs" />
     <Compile Include="CQRS\IEventPublisher.cs" />
-    <Compile Include="CQRS\IHandler.cs" />
+    <Compile Include="CQRS\AbstractHandlers.cs" />
     <Compile Include="CQRS\IMessage.cs" />
     <Compile Include="CQRS\InternalBus.cs" />
     <Compile Include="IFilterProvider.cs" />

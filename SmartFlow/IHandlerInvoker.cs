@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Smartflow.Core.CQRS;
 
 namespace Smartflow.Core
@@ -8,11 +9,38 @@ namespace Smartflow.Core
     public interface IHandlerInvoker
     {
         /// <summary>
-        /// Invoke a handler with the message
+        /// Invoke a handler with the command
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="handler"></param>
-        /// <param name="message"></param>
-        void InvokeHandler<T>(IHandler<T> handler, T message) where T : class, IMessage;
+        /// <param name="command"></param>
+        void InvokeHandler<T>(ICommandHandler<T> handler, T command) where T : Command;
+
+
+        /// <summary>
+        /// Invoke a handler with the command
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="handler"></param>
+        /// <param name="command"></param>
+        void InvokeHandler<T>(IEventHandler<T> handler, T command) where T : Event;
+
+        /// <summary>
+        /// Invoke a handler asynchronously with the event
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="handler"></param>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        Task InvokeHandlerAsync<T>(IAsyncCommandHandler<T> handler, T command) where T : Command;
+
+        /// <summary>
+        /// Invoke a handler asynchronously with the event
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="handler"></param>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        Task InvokeHandlerAsync<T>(IAsyncEventHandler<T> handler, T command) where T : Event;
     }
 }

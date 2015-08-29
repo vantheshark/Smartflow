@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Smartflow.Demo.BingNewsSearch
+namespace Smartflow.Demo.Common
 {
     public class SearchResult
     {

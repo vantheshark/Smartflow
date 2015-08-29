@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Smartflow.Demo.BingNewsSearch
+namespace Smartflow.Demo.Common
 {
     public interface ISearchAuditService
     {

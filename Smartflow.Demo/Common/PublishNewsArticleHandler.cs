@@ -1,12 +1,12 @@
 using log4net;
 using Smartflow.Core.CQRS;
 
-namespace Smartflow.Demo.BingNewsSearch
+namespace Smartflow.Demo.Common
 {
     /// <summary>
     /// Publish the post to websocket to display instant search
     /// </summary>
-    public class PublishNewsArticleHandler : Handler<NewsArticleFound>
+    public class PublishNewsArticleHandler : EventHandler<NewsArticleFound>
     {
         private readonly ILog _logger;
 

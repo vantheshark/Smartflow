@@ -4,6 +4,7 @@ using System.ServiceProcess;
 using System.Threading;
 using Smartflow.Core.CQRS;
 using Smartflow.Demo.BingNewsSearch;
+using Smartflow.Demo.Common;
 
 namespace Smartflow.Demo
 {
