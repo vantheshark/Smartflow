@@ -16,9 +16,130 @@
             <param name="logicalPriority"></param>
             <returns></returns>
         </member>
+        <member name="T:Smartflow.RabbitMQ.SmartflowRouteFinder">
+            <summary>
+            Default route finder for using with RabbitMQ and Burrow.NET
+            </summary>
+        </member>
+        <member name="F:Smartflow.RabbitMQ.SmartflowRouteFinder.ExchangeAndQueuePrefixName">
+            <summary>
+            Default prefix name for exchanges and queues
+            </summary>
+        </member>
+        <member name="F:Smartflow.RabbitMQ.SmartflowRouteFinder._environment">
+            <summary>
+            Environment string
+            </summary>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.SmartflowRouteFinder.#ctor(System.String)">
+            <summary>
+            Initialize the route finder with the provided environment string
+            </summary>
+            <param name="environment"></param>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.SmartflowRouteFinder.FindExchangeName``1">
+            <summary>
+            Generate the exchange name
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.SmartflowRouteFinder.FindRoutingKey``1">
+            <summary>
+            Generate the routing key
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.SmartflowRouteFinder.FindQueueName``1(System.String)">
+            <summary>
+            Generate the queue name
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="subscriptionName"></param>
+            <returns></returns>
+        </member>
         <member name="T:Smartflow.RabbitMQ.SmartflowMessage">
             <summary>
             This is just a wrapper of IDistributedMessage to send to RabbitMQ queues
+            </summary>
+        </member>
+        <member name="P:Smartflow.RabbitMQ.SmartflowMessage.DistributedMessage">
+            <summary>
+            An embeded object for the distributed Command or Event
+            </summary>
+        </member>
+        <member name="T:Smartflow.RabbitMQ.RabbitMqBus">
+            <summary>
+            The bus implementation using RabbitMQ and Burrow.NET
+            </summary>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.RabbitMqBus.#ctor(Smartflow.Core.ILogger,Smartflow.Core.CQRS.InternalBus,Smartflow.RabbitMQ.LogicalPriorityMapper,System.String,System.String,System.Boolean)">
+            <summary>
+            Initialize the bus
+            </summary>
+            <param name="logger"></param>
+            <param name="internalBus"></param>
+            <param name="priorityMapper"></param>
+            <param name="connectionString"></param>
+            <param name="environment"></param>
+            <param name="setupQueues"></param>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.RabbitMqBus.SetRouteFinder(Burrow.IRouteFinder)">
+            <summary>
+            Change the route finder
+            </summary>
+            <param name="routeFinder"></param>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.RabbitMqBus.GetMessageCount">
+            <summary>
+            Count all messages from all the queues
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.RabbitMqBus.Send``1(``0)">
+            <summary>
+            Send the distributed command
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="command"></param>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.RabbitMqBus.Query``1(Smartflow.Core.CQRS.Query{``0})">
+            <summary>
+            Execute a query for result immediately
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.RabbitMqBus.Publish``1(``0)">
+            <summary>
+            Publish the distributed event
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="event"></param>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.RabbitMqBus.Start">
+            <summary>
+            Start the bus
+            </summary>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.RabbitMqBus.CreateSubscription">
+            <summary>
+            Create Burrow.NET subscription to the queues
+            </summary>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.RabbitMqBus.CreateRoutes``1(System.String,System.UInt32)">
+            <summary>
+            Create the required exchange and queues
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="connectionString"></param>
+            <param name="maxPriority"></param>
+        </member>
+        <member name="M:Smartflow.RabbitMQ.RabbitMqBus.Dispose">
+            <summary>
+            Dispose the RabbitMQ bus
             </summary>
         </member>
         <member name="T:Smartflow.RabbitMQ.RabbitMqModule">
@@ -26,11 +147,12 @@
             Register this module to use RabbitMQ as the bus instead of <see cref="T:Smartflow.Core.CQRS.InternalBus"/>
             </summary>
         </member>
-        <member name="M:Smartflow.RabbitMQ.RabbitMqModule.Load(Smartflow.RabbitMQ.LogicalPriorityMapper)">
+        <member name="M:Smartflow.RabbitMQ.RabbitMqModule.Load(Smartflow.RabbitMQ.LogicalPriorityMapper,Burrow.IRouteFinder)">
             <summary>
             Init the module with provided <see cref="T:Smartflow.RabbitMQ.LogicalPriorityMapper"/>
             </summary>
             <param name="mapper"></param>
+            <param name="routeFinder">custom route finder</param>
             <returns></returns>
         </member>
         <member name="M:Smartflow.RabbitMQ.RabbitMqModule.Start">

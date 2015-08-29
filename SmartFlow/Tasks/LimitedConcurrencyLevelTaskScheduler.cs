@@ -45,7 +45,7 @@ namespace Smartflow.Core.Tasks
         /// <param name="task">The task to be queued.</param>
         protected override sealed void QueueTask(Task task)
         {
-            if (task is PriorityTask && ((task as PriorityTask).OnDemand ||(task as PriorityTask).Priority == (uint)MessagePriority.OnDemand))
+            if (task is PriorityTask && ((task as PriorityTask).OnDemand ||(task as PriorityTask).Priority == (uint)MessagePriority.Highest))
             {
                 TryExecuteTask(task);
                 return;

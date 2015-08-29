@@ -20,11 +20,11 @@ namespace Smartflow.Demo
 
             builder.RegisterType<SearchAuditService>().As<ISearchAuditService>().SingleInstance();
 
-            builder.RegisterType<BingNewsSearchCommandHandler>().As<ICommandHandler<NewsSearchCommand>>().InstancePerDependency();
+            builder.RegisterType<BingNewsSearchCommandHandler>().As<IAsyncCommandHandler<NewsSearchCommand>>().InstancePerDependency();
 
             builder.RegisterType<PublishNewsArticleHandler>().As<IEventHandler<NewsArticleFound>>().InstancePerDependency();
 
-            builder.RegisterType<SaveNewsPostHandler>().As<IEventHandler<NewsArticleFound>>().InstancePerDependency();
+            builder.RegisterType<SaveNewsPostHandler>().As<IAsyncEventHandler<NewsArticleFound>>().InstancePerDependency();
         }
     }
 }

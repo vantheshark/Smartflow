@@ -31,17 +31,17 @@ namespace Smartflow.Demo
 
     public class HandlerPerformanceLogFilterAttribute : FilterAttribute, IMessageFilter<NewsSearchCommand>
     {
-        private readonly Stopwatch _stopwatch = new Stopwatch();
-
         public void OnMessageExecuting(HandlerContext<NewsSearchCommand> context)
         {
-            _stopwatch.Start();
+            var sw = Stopwatch.StartNew();
+            context.MetaData["_Stopwatch"] = sw;
         }
 
         public void OnMessageExecuted(MessageHandledContext<NewsSearchCommand> context)
         {
-            _stopwatch.Stop();
-            Console.WriteLine("Search {0} in {1:#.##}s", context.Message.Query, _stopwatch.Elapsed.TotalSeconds);
+            var sw = (Stopwatch)context.MetaData["_Stopwatch"];
+            sw.Stop();
+            Console.WriteLine("Search {0} in {1:#.##}s", context.Message.Query, sw.Elapsed.TotalSeconds);
         }
     }
 }

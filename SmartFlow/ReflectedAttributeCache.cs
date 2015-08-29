@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Reflection;
 
 namespace Smartflow.Core
@@ -29,8 +28,6 @@ namespace Smartflow.Core
             where TAttribute : Attribute
             where TMemberInfo : MemberInfo
         {
-            Debug.Assert(memberInfo != null);
-            Debug.Assert(lookup != null);
             // Frequently called, so use a static delegate
             // An inline delegate cannot be used because the C# compiler does not cache inline delegates that reference generic method arguments
             return lookup.GetOrAdd(memberInfo, CachedDelegates<TMemberInfo, TAttribute>.GetCustomAttributes);
@@ -40,9 +37,9 @@ namespace Smartflow.Core
             where TAttribute : Attribute
             where TMemberInfo : MemberInfo
         {
-            internal static Func<TMemberInfo, ReadOnlyCollection<TAttribute>> GetCustomAttributes = memberInfo =>
+            internal static readonly Func<TMemberInfo, ReadOnlyCollection<TAttribute>> GetCustomAttributes = memberInfo =>
             {
-                return new ReadOnlyCollection<TAttribute>((TAttribute[])memberInfo.GetCustomAttributes(typeof(TAttribute), inherit: true));
+                return new ReadOnlyCollection<TAttribute>((TAttribute[])memberInfo.GetCustomAttributes(typeof(TAttribute), true));
             };
         }
     }

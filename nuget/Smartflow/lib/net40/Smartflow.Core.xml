@@ -4,6 +4,38 @@
         <name>Smartflow.Core</name>
     </assembly>
     <members>
+        <member name="T:Smartflow.Core.CQRS.Query`1">
+            <summary>
+            A special command that have a result
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Smartflow.Core.CQRS.Command">
+            <summary>
+            A command sender should send a Command to only 1 target which can handle it
+            In other words, a command should be handled by only 1 handler
+            </summary>
+        </member>
+        <member name="T:Smartflow.Core.CQRS.IMessage">
+            <summary>
+            Implement this class as a message object which contains information for a handler to handle it
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.CQRS.IMessage.Priority">
+            <summary>
+            A message should have a priority to be processed. The higher priority it is, the faster the message will be processed
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.CQRS.Command.Priority">
+            <summary>
+            A command should have a priority to be processed. The higher priority it is, the faster the command will be processed
+            </summary>
+        </member>
+        <member name="P:Smartflow.Core.CQRS.Query`1.Result">
+            <summary>
+            The result
+            </summary>
+        </member>
         <member name="T:Smartflow.Core.CQRS.ICommandHandler`1">
             <summary>
             Handle a command and return a list of events
@@ -739,33 +771,23 @@
             This class provides some extension methods for the IMessage object
             </summary>
         </member>
-        <member name="M:Smartflow.Core.CQRS.MessageExtensions.OnDemand``1(``0)">
+        <member name="M:Smartflow.Core.CQRS.MessageExtensions.WithHighestPriority``1(``0)">
             <summary>
             Change the priority of current message to be max value so it can be executed asap
             </summary>
             <param name="msg"></param>
             <returns></returns>
         </member>
-        <member name="T:Smartflow.Core.CQRS.Command">
+        <member name="T:Smartflow.Core.CQRS.CommandSenderExtensions">
             <summary>
-            A command sender should send a Command to only 1 target which can handle it
-            In other words, a command should be handled by only 1 handler
+            This class provides some extension methods for the IMessage object
             </summary>
         </member>
-        <member name="T:Smartflow.Core.CQRS.IMessage">
+        <member name="M:Smartflow.Core.CQRS.CommandSenderExtensions.WaitForResult``1(Smartflow.Core.CQRS.ICommandSender,Smartflow.Core.CQRS.Query{``0})">
             <summary>
-            Implement this class as a message object which contains information for a handler to handle it
+            Send the query command and wait for result synchronously
             </summary>
-        </member>
-        <member name="P:Smartflow.Core.CQRS.IMessage.Priority">
-            <summary>
-            A message should have a priority to be processed. The higher priority it is, the faster the message will be processed
-            </summary>
-        </member>
-        <member name="P:Smartflow.Core.CQRS.Command.Priority">
-            <summary>
-            A command should have a priority to be processed. The higher priority it is, the faster the command will be processed
-            </summary>
+            <returns></returns>
         </member>
         <member name="T:Smartflow.Core.CQRS.Event">
             <summary>
@@ -790,6 +812,14 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="command"></param>
+        </member>
+        <member name="M:Smartflow.Core.CQRS.ICommandSender.Query``1(Smartflow.Core.CQRS.Query{``0})">
+            <summary>
+            Ask for data immediately
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="query"></param>
+            <returns></returns>
         </member>
         <member name="T:Smartflow.Core.CQRS.IEventPublisher">
             <summary>
@@ -878,6 +908,14 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="command"></param>
+        </member>
+        <member name="M:Smartflow.Core.CQRS.InternalBus.Query``1(Smartflow.Core.CQRS.Query{``0})">
+            <summary>
+            Execute a query for result immediately
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="query"></param>
+            <returns></returns>
         </member>
         <member name="M:Smartflow.Core.CQRS.InternalBus.Publish``1(``0)">
             <summary>
@@ -1080,7 +1118,7 @@
             Priority 10
             </summary>
         </member>
-        <member name="F:Smartflow.Core.Tasks.MessagePriority.OnDemand">
+        <member name="F:Smartflow.Core.Tasks.MessagePriority.Highest">
             <summary>
             Highest priority, any message with this priority once scheduled with the InternalBus will be sent to the Scheduler to execute straight away
             </summary>

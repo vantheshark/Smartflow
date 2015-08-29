@@ -22,6 +22,10 @@ namespace Smartflow.Demo.BingNewsSearch
 
         public async Task<BingNewsSearchPage> SearchAsync(string searchKeyword)
         {
+            if (searchKeyword == "#MH370")
+            {
+                await Task.Delay(1000).ConfigureAwait(false);
+            }
             var pageUrl = BingNewsSearchUrlBuilder.BuildSearchUrl(searchKeyword);
 
             try

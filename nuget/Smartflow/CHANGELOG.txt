@@ -1,2 +1,5 @@
+* 1.0.3 (28 October 2014)
+- Add Query object & allow executing a query for result synchronously
+
 * 1.0.0 (29 March 2014)
 

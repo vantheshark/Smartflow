@@ -8,7 +8,7 @@ namespace Smartflow.Core
 {
     internal class DependencyResolverHandlerProvider : IHandlerProvider
     {
-        private readonly ConcurrentDictionary<Type, Type> _handlerTypeCache = new ConcurrentDictionary<Type, Type>();
+        private readonly ConcurrentDictionary<Tuple<Type, Type>, Type> _handlerTypeCache = new ConcurrentDictionary<Tuple<Type, Type>, Type>();
         private readonly Type _cmdHandlerType = typeof(ICommandHandler<>);
         private readonly Type _asyncCmdHandlerType = typeof(IAsyncCommandHandler<>);
         private readonly Type _eventHandlerType = typeof(IEventHandler<>);
@@ -16,33 +16,48 @@ namespace Smartflow.Core
         
         public IEnumerable<ICommandHandler<T>> GetCommandHandlers<T>() where T : Command
         {
-            return ResolveHandlers<T, ICommandHandler<T>>(typeof(T), _cmdHandlerType);
+            return ResolveHandlers<ICommandHandler<T>>(typeof(T), _cmdHandlerType);
         }
 
         public IEnumerable<IAsyncCommandHandler<T>> GetAsyncCommandHandlers<T>() where T : Command
         {
-            return ResolveHandlers<T, IAsyncCommandHandler<T>>(typeof(T), _asyncCmdHandlerType);
+            return ResolveHandlers<IAsyncCommandHandler<T>>(typeof(T), _asyncCmdHandlerType);
+        }
+
+        private IEnumerable<THandler> ResolveHandlers<THandler>(Type messageType, Type genericHandlerType)
+        {
+            var key = new Tuple<Type, Type>(messageType, genericHandlerType);
+            if (!_handlerTypeCache.ContainsKey(key))
+            {
+                _handlerTypeCache.TryAdd(key, genericHandlerType.MakeGenericType(messageType));
+            }
+
+            var type = _handlerTypeCache[key];
+            return DependencyResolver.Current.GetServices(type).Select(h => (THandler)h);
         }
 
         public IEnumerable<IEventHandler<T>> GetEventHandlers<T>(Type eventType) where T : Event
         {
-            return ResolveHandlers<T, IEventHandler<T>>(eventType, _eventHandlerType);
+            var type = GetHandlerType(eventType, _eventHandlerType);
+            return DependencyResolver.Current.GetServices(type).Select(h => (new EventHandlerAdapter<T>(h)));
         }
 
         public IEnumerable<IAsyncEventHandler<T>> GetAsyncEventHandlers<T>(Type eventType) where T : Event
         {
-            return ResolveHandlers<T, IAsyncEventHandler<T>>(eventType, _asyncEventHandlerType);
+            var type = GetHandlerType(eventType, _asyncEventHandlerType);
+            return DependencyResolver.Current.GetServices(type).Select(h => (new AsyncEventHandlerAdapter<T>(h)));
         }
 
-        public IEnumerable<THandler> ResolveHandlers<T, THandler>(Type messageType, Type genericHandlerType) where T : IMessage
+        private Type GetHandlerType(Type eventType, Type genericHandlerType)
         {
-            if (!_handlerTypeCache.ContainsKey(messageType))
+            var key = new Tuple<Type, Type>(eventType, genericHandlerType);
+            if (!_handlerTypeCache.ContainsKey(key))
             {
-                _handlerTypeCache.TryAdd(messageType, genericHandlerType.MakeGenericType(messageType));
+                _handlerTypeCache.TryAdd(key, genericHandlerType.MakeGenericType(eventType));
             }
 
-            var type = _handlerTypeCache[messageType];
-            return DependencyResolver.Current.GetServices(type).Select(h => (THandler)h);
+            var type = _handlerTypeCache[key];
+            return type;
         }
 
         public void RegisterCommandHandler<T>(ICommandHandler<T> handler) where T : Command

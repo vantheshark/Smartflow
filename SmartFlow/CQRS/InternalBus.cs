@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Smartflow.Core.Tasks;
 
 namespace Smartflow.Core.CQRS
@@ -89,9 +90,50 @@ namespace Smartflow.Core.CQRS
             
             var priorityTask = CreatePriorityTask(command, a);
 
-            priorityTask.OnDemand = command.Priority == (uint)MessagePriority.OnDemand;
+            priorityTask.OnDemand = command.Priority == (uint)MessagePriority.Highest;
             priorityTask.Priority = command.Priority;
             priorityTask.Start(PriorityTask.Factory.Scheduler);
+        }
+
+        /// <summary>
+        /// Execute a query for result immediately
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public Task<T> Query<T>(Query<T> query)
+        {
+            var handlers = HandlerProvider.Providers.GetCommandHandlers<Query<T>>().ToList();
+            if (handlers.Count > 0)
+            {
+                if (handlers.Count != 1)
+                    throw new InvalidOperationException("cannot send to more than one handler");
+                var handler1 = handlers[0];
+
+                return Task<T>.Factory.StartNew(() =>
+                {
+                    _handlerInvoker.InvokeHandler(handler1, query);
+                    return query.Result;
+                }, TaskCreationOptions.PreferFairness);
+            }
+
+
+            var asyncHandlers = HandlerProvider.Providers.GetAsyncCommandHandlers<Query<T>>().ToList();
+            if (asyncHandlers.Count > 0)
+            {
+                if (asyncHandlers.Count != 1)
+                {
+                    throw new InvalidOperationException(string.Format("Cannot send {0} to more than one handler", typeof(T).Name));
+                }
+                var asyncHandler = asyncHandlers[0];
+                return Task.Run(async () =>
+                {
+                    await _handlerInvoker.InvokeHandlerAsync(asyncHandler, query).ConfigureAwait(false);
+                    return query.Result;
+                });
+            }
+            
+            throw new InvalidOperationException("no handler registered");
         }
 
         /// <summary>
@@ -107,7 +149,7 @@ namespace Smartflow.Core.CQRS
                 var h = handler;
                 var priorityTask = CreatePriorityTask(@event, () => { h.Handle(@event); });
 
-                priorityTask.OnDemand = @event.Priority == (uint)MessagePriority.OnDemand;
+                priorityTask.OnDemand = @event.Priority == (uint)MessagePriority.Highest;
                 priorityTask.Priority = @event.Priority;
                 priorityTask.Start(PriorityTask.Factory.Scheduler);
             }
@@ -117,7 +159,7 @@ namespace Smartflow.Core.CQRS
             {
                 var h = handler;
                 var priorityTask = CreatePriorityTask(@event, async () => { await h.HandleAsync(@event).ConfigureAwait(false); });
-                priorityTask.OnDemand = @event.Priority == (uint)MessagePriority.OnDemand;
+                priorityTask.OnDemand = @event.Priority == (uint)MessagePriority.Highest;
                 priorityTask.Priority = @event.Priority;
                 priorityTask.Start(PriorityTask.Factory.Scheduler);
             }
